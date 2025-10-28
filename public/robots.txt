@@ -1,0 +1,9 @@
+# Allow all user-agents
+User-agent: *
+Disallow:
+
+# Host
+Host: https://www.syntraxai.com
+
+# Sitemap
+Sitemap: https://www.syntraxai.com/sitemap.xml
