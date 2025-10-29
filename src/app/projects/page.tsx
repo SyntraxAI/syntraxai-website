@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-import ProjectCard from '@/components/ProjectCard'; // Import our new component
-import { projectData } from '@/data/projects'; // Import our new data
+import ProjectCard from '@/components/ProjectCard'; // We reuse our existing component!
+import { contentfulClient } from '@/lib/contentful'; // Import our new client
 
 // SEO: Add page-specific metadata
 export const metadata: Metadata = {
@@ -8,7 +8,25 @@ export const metadata: Metadata = {
   description: 'The essential, high-impact projects you need, delivered with precision and speed. No hidden fees. No long-term commitments.',
 };
 
-export default function ProjectsPage() {
+// This is the data-fetching function.
+// It runs on the server during the build.
+async function getProjects() {
+  try {
+    const entries = await contentfulClient.getEntries({
+      content_type: 'project', // This is the 'Api Identifier' of our Content Model
+    });
+    return entries.items;
+  } catch (error) {
+    console.error("Error fetching projects from Contentful:", error);
+    return []; // Return an empty array on error
+  }
+}
+
+
+export default async function ProjectsPage() {
+  // 1. Fetch the data from Contentful
+  const projects = await getProjects();
+
   return (
     <main className="bg-white">
       <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
@@ -25,19 +43,22 @@ export default function ProjectsPage() {
 
         {/* Product Menu Grid */}
         <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-stretch gap-8 lg:max-w-none lg:grid-cols-3">
-          {/* We map (loop) over our projectData array.
-            For each project, we render a ProjectCard component
-            and pass the project's data in as props.
-          */}
-          {projectData.map((project) => (
+          {/* 2. We map over the data from Contentful */}
+          {projects.map((project) => (
             <ProjectCard
-              key={project.title}
-              title={project.title}
-              price={project.price}
-              description={project.description}
-              includes={project.includes}
-              whoFor={project.whoFor}
-              ctaLink={project.ctaLink}
+              key={project.sys.id}
+              // @ts-ignore
+              title={project.fields.title}
+              // @ts-ignore
+              price={project.fields.price}
+              // @ts-ignore
+              description={project.fields.description}
+              // @ts-ignore
+              includes={project.fields.includes}
+              // @ts-ignore
+              whoFor={project.fields.whoFor}
+              // @ts-ignore
+              ctaLink={project.fields.ctaLink}
             />
           ))}
         </div>
