@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import { submitProjectForm } from '@/app/actions'; // Import our new Server Action
+import { submitProjectForm } from '@/app/actions'; // Import our Server Action
 
 export default function ProjectIntakeForm() {
   const searchParams = useSearchParams();
@@ -10,12 +10,14 @@ export default function ProjectIntakeForm() {
 
   // Add state to manage form status
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [formMessage, setFormMessage] = useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
     setFormMessage('');
+    setFormStatus('idle');
 
     // Get data from the form
     const formData = new FormData(event.currentTarget);
@@ -31,16 +33,32 @@ export default function ProjectIntakeForm() {
 
     setIsSubmitting(false);
     if (result.success) {
+      setFormStatus('success');
       setFormMessage("Success! We've received your inquiry and will be in touch soon.");
       (event.target as HTMLFormElement).reset(); // Clear the form
     } else {
+      setFormStatus('error');
       setFormMessage(`Error: ${result.error || 'Failed to submit form.'}`);
     }
   };
 
+  // ---- NEW SUCCESS SCREEN ----
+  // If the form has been successfully submitted, show this new success message
+  if (formStatus === 'success') {
+    return (
+      <div className="space-y-6 text-center py-10">
+        <h2 className="text-2xl font-semibold text-green-600">Inquiry Sent!</h2>
+        <p className="text-gray-700">{formMessage}</p>
+        <p className="text-gray-500 text-sm">You may now close this page or navigate away.</p>
+      </div>
+    );
+  }
+
+  // ---- THE FORM (with a new error message location) ----
+  // Otherwise, show the form
   return (
     <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
-      {/* (All the input fields are the same as before) */}
+      {/* Input fields are the same as before */}
       <div className="sm:col-span-2">
         <label htmlFor="name" className="block text-sm font-semibold leading-6 text-gray-900">Full name</label>
         <div className="mt-2.5">
@@ -73,9 +91,9 @@ export default function ProjectIntakeForm() {
         </button>
       </div>
 
-      {/* Success/Error Message */}
-      {formMessage && (
-        <div className="sm:col-span-2 text-center text-sm">
+      {/* ---- NEW ERROR MESSAGE ---- */}
+      {formStatus === 'error' && (
+        <div className="sm:col-span-2 text-center text-sm text-red-600">
           <p>{formMessage}</p>
         </div>
       )}
