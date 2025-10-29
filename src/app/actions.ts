@@ -61,7 +61,7 @@ export async function submitStrategyForm(formData: StrategyFormData) {
   try {
     const { data, error } = await resend.emails.send({
       from: 'Syntrax AI <leads@leads.syntraxai.com>', // Must be from your verified domain
-      to: ['you@example.com'], // CHANGE THIS to your email
+      to: ['adriank.viloria@gmail.com'], // CHANGE THIS to your email
       subject: `New "Growth" Lead: ${formData.company}`,
       html: `
         <h1>New "Growth" Program Lead (Strategy Call)</h1>
