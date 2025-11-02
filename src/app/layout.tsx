@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+// 1. Import our new ClientLayoutWrapper
+import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
+
 const inter = Inter({ subsets: ["latin"] });
 
-// SEO: Set up default metadata
 export const metadata: Metadata = {
   title: {
     template: "%s | Syntrax AI",
@@ -18,24 +20,29 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // SEO: Implement Organization Schema
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Syntrax AI",
     "url": "https://www.syntraxai.com",
-    // "logo": "https://www.syntraxai.com/logo.png", // Add logo URL when available
+    // "logo": "https://www.syntraxai.com/logo.png",
   };
 
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* SEO: Add JSON-LD Schema to the head */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-        {children}
+        
+        {/* 2. We wrap {children} in our new ClientLayoutWrapper.
+          The chat widget logic is now safely inside this wrapper.
+        */}
+        <ClientLayoutWrapper>
+          {children}
+        </ClientLayoutWrapper>
+
       </body>
     </html>
   );
