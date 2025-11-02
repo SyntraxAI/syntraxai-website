@@ -4,23 +4,8 @@ import { notFound } from 'next/navigation';
 import { contentfulClient } from '@/lib/contentful';
 import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
-import type { Asset, Entry, EntrySkeletonType } from 'contentful'; // Import types
-
-// 1. Define the shape of our Featured Image asset
-interface FeaturedImage extends Asset {
-  fields: {
-    title?: string;
-    file: {
-      url: string;
-      details: {
-        image: {
-          width: number;
-          height: number;
-        };
-      };
-    };
-  };
-}
+// 1. Import the 'Asset' type from contentful
+import type { Asset, Entry, EntrySkeletonType } from 'contentful';
 
 // 2. Define the shape of our Blog Post fields
 interface BlogPostFields {
@@ -28,23 +13,24 @@ interface BlogPostFields {
   slug: string;
   publishDate: string;
   excerpt: string;
-  featuredImage?: FeaturedImage; // Use the interface here
+  // 3. Use the built-in 'Asset' type from Contentful
+  featuredImage?: Asset<undefined, string>; 
   body: Document;
 }
 
-// 3. Define the full Blog Post entry
+// 4. Define the full Blog Post entry
 interface BlogPostEntry extends Entry<EntrySkeletonType, undefined, string> {
   fields: BlogPostFields;
 }
 
-// 4. Define the props for this page
+// 5. Define the props for this page
 type BlogPostPageProps = {
   params: {
     slug: string;
   };
 };
 
-// 5. This function tells Next.js which slugs (pages) to pre-build
+// 6. This function tells Next.js which slugs (pages) to pre-build
 export async function generateStaticParams() {
   const entries = await contentfulClient.getEntries<BlogPostFields>({
     content_type: 'blogPost',
@@ -55,14 +41,14 @@ export async function generateStaticParams() {
   }));
 }
 
-// 6. This function fetches the data for a *single* post
+// 7. This function fetches the data for a *single* post
 async function getPost(slug: string): Promise<BlogPostEntry | null> {
   try {
     const entries = await contentfulClient.getEntries<BlogPostFields>({
       content_type: 'blogPost',
       'fields.slug': slug,
       limit: 1,
-      include: 2 // THIS IS THE FIX: It tells Contentful to include the 'featuredImage' data
+      include: 2 // This is critical: it tells Contentful to include the image data
     });
     
     if (entries.items.length === 0) {
@@ -75,7 +61,7 @@ async function getPost(slug: string): Promise<BlogPostEntry | null> {
   }
 }
 
-// 7. This function generates the page-specific metadata
+// 8. This function generates the page-specific metadata
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const post = await getPost(params.slug);
   
@@ -95,7 +81,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 
-// 8. The Page Component (now fully typed, no @ts-ignore)
+// 9. The Page Component (now fully typed and safe)
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = await getPost(params.slug);
 
@@ -105,9 +91,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const { title, publishDate, featuredImage, body } = post.fields;
   
-  const imageUrl = featuredImage?.fields?.file?.url; // Use optional chaining
+  // 10. Safely get all image properties
+  const imageUrl = featuredImage?.fields?.file?.url;
   const fullImageUrl = imageUrl?.startsWith('//') ? `https:${imageUrl}` : imageUrl;
   const imageAlt = featuredImage?.fields?.title || title;
+  const imageWidth = featuredImage?.fields?.file?.details?.image?.width;
+  const imageHeight = featuredImage?.fields?.file?.details?.image?.height;
 
   return (
     <main className="bg-white py-24 sm:py-32">
@@ -127,14 +116,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </time>
           </header>
 
-          {/* Featured Image */}
-          {fullImageUrl && (
+          {/* Featured Image (now checks for all properties) */}
+          {fullImageUrl && imageWidth && imageHeight && (
             <div className="mb-12">
               <Image
                 src={fullImageUrl}
                 alt={imageAlt}
-                width={featuredImage?.fields.file.details.image.width || 800} // Use real width
-                height={featuredImage?.fields.file.details.image.height || 450} // Use real height
+                width={imageWidth}
+                height={imageHeight}
                 className="w-full rounded-2xl bg-gray-100 object-cover shadow-lg"
               />
             </div>
