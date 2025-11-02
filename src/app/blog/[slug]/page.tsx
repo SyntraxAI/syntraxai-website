@@ -54,9 +54,9 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 
   // @ts-ignore
-  const title = post.fields.title;
+  const title = post.fields.title as string || 'Untitled Post';
   // @ts-ignore
-  const description = post.fields.excerpt;
+  const description = post.fields.excerpt as string || 'No description available.';
 
   return {
     title: `${title} | Syntrax AI Blog`,
