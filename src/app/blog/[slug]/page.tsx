@@ -4,35 +4,30 @@ import { notFound } from 'next/navigation';
 import { contentfulClient } from '@/lib/contentful';
 import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
-// 1. Import the 'Asset' type from contentful
+// 1. Import the 'Asset' and 'EntrySkeletonType' types
 import type { Asset, Entry, EntrySkeletonType } from 'contentful';
 
-// 2. Define the shape of our Blog Post fields
-interface BlogPostFields {
+// 2. Define the shape of our Blog Post fields using EntrySkeletonType
+//    This is the correct way to define our model for TypeScript
+type BlogPostSkeleton = EntrySkeletonType<{
   title: string;
   slug: string;
   publishDate: string;
   excerpt: string;
-  // 3. Use the built-in 'Asset' type from Contentful
-  featuredImage?: Asset<undefined, string>; 
+  featuredImage?: Asset<undefined, string>; // Use the built-in 'Asset' type
   body: Document;
-}
+}>
 
-// 4. Define the full Blog Post entry
-interface BlogPostEntry extends Entry<EntrySkeletonType, undefined, string> {
-  fields: BlogPostFields;
-}
-
-// 5. Define the props for this page
+// 3. Define the props for this page
 type BlogPostPageProps = {
   params: {
     slug: string;
   };
 };
 
-// 6. This function tells Next.js which slugs (pages) to pre-build
+// 4. This function tells Next.js which slugs (pages) to pre-build
 export async function generateStaticParams() {
-  const entries = await contentfulClient.getEntries<BlogPostFields>({
+  const entries = await contentfulClient.getEntries<BlogPostSkeleton>({
     content_type: 'blogPost',
   });
 
@@ -41,10 +36,10 @@ export async function generateStaticParams() {
   }));
 }
 
-// 7. This function fetches the data for a *single* post
-async function getPost(slug: string): Promise<BlogPostEntry | null> {
+// 5. This function fetches the data for a *single* post
+async function getPost(slug: string): Promise<Entry<BlogPostSkeleton> | null> {
   try {
-    const entries = await contentfulClient.getEntries<BlogPostFields>({
+    const entries = await contentfulClient.getEntries<BlogPostSkeleton>({
       content_type: 'blogPost',
       'fields.slug': slug,
       limit: 1,
@@ -54,14 +49,14 @@ async function getPost(slug: string): Promise<BlogPostEntry | null> {
     if (entries.items.length === 0) {
       return null;
     }
-    return entries.items[0] as BlogPostEntry; // Cast to our specific type
+    return entries.items[0]; // No casting needed
   } catch (error) {
     console.error("Error fetching post by slug:", error);
     return null;
   }
 }
 
-// 8. This function generates the page-specific metadata
+// 6. This function generates the page-specific metadata
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const post = await getPost(params.slug);
   
@@ -80,8 +75,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   };
 }
 
-
-// 9. The Page Component (now fully typed and safe)
+// 7. The Page Component (now fully typed and safe)
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = await getPost(params.slug);
 
@@ -91,7 +85,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const { title, publishDate, featuredImage, body } = post.fields;
   
-  // 10. Safely get all image properties
+  // 8. Safely get all image properties using optional chaining
   const imageUrl = featuredImage?.fields?.file?.url;
   const fullImageUrl = imageUrl?.startsWith('//') ? `https:${imageUrl}` : imageUrl;
   const imageAlt = featuredImage?.fields?.title || title;
