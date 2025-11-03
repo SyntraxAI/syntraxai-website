@@ -23,7 +23,7 @@ type BlogPostSkeleton = EntrySkeletonType<{
 // Fetch all blog posts
 async function getAllPosts() {
   try {
-    // 1. We REMOVED the <BlogPostSkeleton> generic from here
+    // 1. We call getEntries WITHOUT the generic type
     const entries = await contentfulClient.getEntries({
       content_type: 'blogPost',
       order: ['-fields.publishDate'],

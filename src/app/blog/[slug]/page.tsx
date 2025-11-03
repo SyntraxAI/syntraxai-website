@@ -6,7 +6,7 @@ import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
 import type { Asset, Entry, EntrySkeletonType } from 'contentful';
 
-// This is our correct type for the blog post fields
+// 1. Define the shape of our Blog Post fields
 type BlogPostSkeleton = EntrySkeletonType<{
   title: string;
   slug: string;
@@ -22,26 +22,28 @@ type BlogPostPageProps = {
   };
 };
 
-// This function tells Next.js which slugs (pages) to pre-build
+// 2. This function tells Next.js which slugs (pages) to pre-build
 export async function generateStaticParams() {
-  // 1. We REMOVED the <BlogPostSkeleton> generic from here
+  // We call getEntries WITHOUT the generic type
   const entries = await contentfulClient.getEntries({
     content_type: 'blogPost',
+    select: ['fields.slug'] // We only need the slug
   });
 
-  // 2. We add the correct type when we map the items
+  // We cast the RESULT to the correct type
   return (entries.items as Entry<BlogPostSkeleton>[]).map((item) => ({
     slug: item.fields.slug,
   }));
 }
 
-// This function fetches the data for a *single* post
+// 3. This function fetches the data for a *single* post
 async function getPost(slug: string): Promise<Entry<BlogPostSkeleton> | null> {
   try {
-    // 3. We REMOVED the <BlogPostSkeleton> generic from here
+    // We call getEntries WITHOUT the generic type
+    // This fixes the 'fields.slug' error
     const entries = await contentfulClient.getEntries({
       content_type: 'blogPost',
-      'fields.slug': slug, // This filter is correct
+      'fields.slug': slug,
       limit: 1,
       include: 2
     });
@@ -49,7 +51,7 @@ async function getPost(slug: string): Promise<Entry<BlogPostSkeleton> | null> {
     if (entries.items.length === 0) {
       return null;
     }
-    // 4. We add the correct type to the returned item
+    // We cast the RESULT to the correct type
     return entries.items[0] as Entry<BlogPostSkeleton>;
   } catch (error) {
     console.error("Error fetching post by slug:", error);
@@ -57,7 +59,7 @@ async function getPost(slug: string): Promise<Entry<BlogPostSkeleton> | null> {
   }
 }
 
-// This function generates the page-specific metadata
+// 4. This function generates the page-specific metadata
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const post = await getPost(params.slug);
   
@@ -77,7 +79,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 
-// The Page Component (This code is mostly the same, just safer)
+// 5. The Page Component
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = await getPost(params.slug);
 
