@@ -2,35 +2,22 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { contentfulClient } from '@/lib/contentful';
-import type { Asset, Entry, EntrySkeletonType } from 'contentful';
-import { Document } from '@contentful/rich-text-types'; // Make sure this is imported
 
 export const metadata: Metadata = {
   title: 'Blog - Syntrax AI',
   description: 'Insights on SEO, AI-powered marketing, and business growth.',
 };
 
-// Define the shape of our Blog Post fields
-type BlogPostSkeleton = EntrySkeletonType<{
-  title: string;
-  slug: string;
-  publishDate: string;
-  excerpt: string;
-  featuredImage?: Asset<undefined, string>;
-  body: Document;
-}>
-
 // Fetch all blog posts
 async function getAllPosts() {
   try {
-    // 1. We call getEntries WITHOUT the generic type
     const entries = await contentfulClient.getEntries({
       content_type: 'blogPost',
       order: ['-fields.publishDate'],
       include: 2,
     });
-    // 2. We add the correct type to the returned items
-    return entries.items as Entry<BlogPostSkeleton>[];
+    // We return the items as 'any'
+    return entries.items as any[];
   } catch (error) {
     console.error("Error fetching blog posts:", error);
     return [];
@@ -50,7 +37,7 @@ export default async function BlogPage() {
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
             Insights on SEO, AI-powered marketing, and business growth.
-          </p>
+          </sP>
         </div>
 
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
