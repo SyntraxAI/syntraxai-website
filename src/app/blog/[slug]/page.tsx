@@ -6,55 +6,58 @@ import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
 import type { Asset, Entry, EntrySkeletonType } from 'contentful';
 
-// 1. Define the shape of our Blog Post fields
+// This is our correct type for the blog post fields
 type BlogPostSkeleton = EntrySkeletonType<{
   title: string;
   slug: string;
   publishDate: string;
   excerpt: string;
-  featuredImage?: Asset<undefined, string>; // Use the built-in 'Asset' type
+  featuredImage?: Asset<undefined, string>;
   body: Document;
 }>
 
-// 2. Define the props for this page
 type BlogPostPageProps = {
   params: {
     slug: string;
   };
 };
 
-// 3. This function tells Next.js which slugs (pages) to pre-build
+// This function tells Next.js which slugs (pages) to pre-build
 export async function generateStaticParams() {
-  const entries = await contentfulClient.getEntries<BlogPostSkeleton>({
+  // 1. We REMOVED the <BlogPostSkeleton> generic from here
+  const entries = await contentfulClient.getEntries({
     content_type: 'blogPost',
   });
 
-  return entries.items.map((item) => ({
+  // 2. We add the correct type when we map the items
+  return (entries.items as Entry<BlogPostSkeleton>[]).map((item) => ({
     slug: item.fields.slug,
   }));
 }
 
-// 4. This function fetches the data for a *single* post
+// This function fetches the data for a *single* post
 async function getPost(slug: string): Promise<Entry<BlogPostSkeleton> | null> {
   try {
-    const entries = await contentfulClient.getEntries<BlogPostSkeleton>({
+    // 3. We REMOVED the <BlogPostSkeleton> generic from here
+    const entries = await contentfulClient.getEntries({
       content_type: 'blogPost',
-      'fields.slug': slug, // This filter is correct
+      'fields.slug': slug,
       limit: 1,
-      include: 2 // This is critical: it tells Contentful to include the image data
+      include: 2
     });
     
     if (entries.items.length === 0) {
       return null;
     }
-    return entries.items[0]; // No casting needed
+    // 4. We add the correct type to the returned item
+    return entries.items[0] as Entry<BlogPostSkeleton>;
   } catch (error) {
     console.error("Error fetching post by slug:", error);
     return null;
   }
 }
 
-// 5. This function generates the page-specific metadata
+// This function generates the page-specific metadata
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const post = await getPost(params.slug);
   
@@ -74,17 +77,16 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 }
 
 
-// 6. The Page Component (now fully typed and safe)
+// The Page Component (This code is mostly the same, just safer)
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = await getPost(params.slug);
 
   if (!post) {
-    notFound(); // If no post, show a 404 page
+    notFound();
   }
 
   const { title, publishDate, featuredImage, body } = post.fields;
   
-  // 7. Safely get all image properties using optional chaining
   const imageUrl = featuredImage?.fields?.file?.url;
   const fullImageUrl = imageUrl?.startsWith('//') ? `https:${imageUrl}` : imageUrl;
   const imageAlt = featuredImage?.fields?.title || title;
@@ -95,7 +97,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     <main className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-3xl px-6 lg:px-8">
         <article>
-          {/* Post Header */}
           <header className="mb-12">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-4">
               {title}
@@ -109,7 +110,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </time>
           </header>
 
-          {/* Featured Image (now checks for all properties) */}
           {fullImageUrl && imageWidth && imageHeight && (
             <div className="mb-12">
               <Image
@@ -122,7 +122,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           )}
 
-          {/* Post Body (using our Rich Text Renderer) */}
           <div className="prose prose-lg">
             <RichText content={body} />
           </div>

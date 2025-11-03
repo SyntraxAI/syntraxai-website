@@ -2,48 +2,47 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { contentfulClient } from '@/lib/contentful';
-// 1. Import the 'Asset' and 'EntrySkeletonType' types
-import type { Asset, EntrySkeletonType } from 'contentful';
+import type { Asset, Entry, EntrySkeletonType } from 'contentful';
 
 export const metadata: Metadata = {
   title: 'Blog - Syntrax AI',
   description: 'Insights on SEO, AI-powered marketing, and business growth.',
 };
 
-// 2. Define the shape of our Blog Post fields using EntrySkeletonType
-//    This is the correct, simple way to define our model for TypeScript
+// Define the shape of our Blog Post fields
 type BlogPostSkeleton = EntrySkeletonType<{
   title: string;
   slug: string;
   publishDate: string;
   excerpt: string;
-  featuredImage?: Asset<undefined, string>; // Use the built-in 'Asset' type
+  featuredImage?: Asset<undefined, string>;
   body: Document; // Document type comes from @contentful/rich-text-types
 }>
 
-// 3. Fetch all blog posts using the correct type
+// Fetch all blog posts using the correct type
 async function getAllPosts() {
   try {
-    const entries = await contentfulClient.getEntries<BlogPostSkeleton>({
+    // 1. We REMOVED the <BlogPostSkeleton> generic from here
+    const entries = await contentfulClient.getEntries({
       content_type: 'blogPost',
-      order: ['-fields.publishDate'], // Order by publish date, newest first
-      include: 2, // Include image data
+      order: ['-fields.publishDate'],
+      include: 2,
     });
-    return entries.items; // No casting needed
+    // 2. We add the correct type to the returned items
+    return entries.items as Entry<BlogPostSkeleton>[];
   } catch (error) {
     console.error("Error fetching blog posts:", error);
     return [];
   }
 }
 
-// 4. The Page Component
+// The Page Component
 export default async function BlogPage() {
   const posts = await getAllPosts();
 
   return (
     <main className="bg-white">
       <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
-        {/* Page Header */}
         <div className="mx-auto max-w-2xl text-center">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
             The Syntrax AI Blog
@@ -53,10 +52,8 @@ export default async function BlogPage() {
           </p>
         </div>
 
-        {/* Blog Post List */}
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {posts.map((post) => {
-            // 5. Safely get all image properties
             const imageUrl = post.fields.featuredImage?.fields?.file?.url;
             const fullImageUrl = imageUrl?.startsWith('//') ? `https:${imageUrl}` : imageUrl;
             const imageAlt = post.fields.featuredImage?.fields?.title || post.fields.title;
@@ -66,7 +63,6 @@ export default async function BlogPage() {
             return (
               <article key={post.sys.id} className="flex flex-col items-start justify-between">
                 <div className="relative w-full">
-                  {/* 6. Check for all properties before rendering Image */}
                   {fullImageUrl && imageWidth && imageHeight ? (
                     <Image
                       src={fullImageUrl}
@@ -76,7 +72,6 @@ export default async function BlogPage() {
                       className="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]"
                     />
                   ) : (
-                    // Placeholder if no image
                     <div className="aspect-[16/9] w-full rounded-2xl bg-gray-100 sm:aspect-[2/1] lg:aspect-[3/2]" />
                   )}
                   <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10" />
