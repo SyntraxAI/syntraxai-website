@@ -3,21 +3,22 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { contentfulClient } from '@/lib/contentful';
 // 1. Import the 'Asset' and 'EntrySkeletonType' types
-import type { Asset, Entry, EntrySkeletonType } from 'contentful';
+import type { Asset, EntrySkeletonType } from 'contentful';
 
 export const metadata: Metadata = {
   title: 'Blog - Syntrax AI',
   description: 'Insights on SEO, AI-powered marketing, and business growth.',
 };
 
-// 2. Define the shape of our Blog Post fields
+// 2. Define the shape of our Blog Post fields using EntrySkeletonType
+//    This is the correct, simple way to define our model for TypeScript
 type BlogPostSkeleton = EntrySkeletonType<{
   title: string;
   slug: string;
   publishDate: string;
   excerpt: string;
   featuredImage?: Asset<undefined, string>; // Use the built-in 'Asset' type
-  body: Document;
+  body: Document; // Document type comes from @contentful/rich-text-types
 }>
 
 // 3. Fetch all blog posts using the correct type
@@ -26,6 +27,7 @@ async function getAllPosts() {
     const entries = await contentfulClient.getEntries<BlogPostSkeleton>({
       content_type: 'blogPost',
       order: ['-fields.publishDate'], // Order by publish date, newest first
+      include: 2, // Include image data
     });
     return entries.items; // No casting needed
   } catch (error) {

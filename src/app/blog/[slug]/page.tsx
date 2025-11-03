@@ -4,11 +4,9 @@ import { notFound } from 'next/navigation';
 import { contentfulClient } from '@/lib/contentful';
 import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
-// 1. Import the 'Asset' and 'EntrySkeletonType' types
 import type { Asset, Entry, EntrySkeletonType } from 'contentful';
 
-// 2. Define the shape of our Blog Post fields using EntrySkeletonType
-//    This is the correct way to define our model for TypeScript
+// 1. Define the shape of our Blog Post fields
 type BlogPostSkeleton = EntrySkeletonType<{
   title: string;
   slug: string;
@@ -18,14 +16,14 @@ type BlogPostSkeleton = EntrySkeletonType<{
   body: Document;
 }>
 
-// 3. Define the props for this page
+// 2. Define the props for this page
 type BlogPostPageProps = {
   params: {
     slug: string;
   };
 };
 
-// 4. This function tells Next.js which slugs (pages) to pre-build
+// 3. This function tells Next.js which slugs (pages) to pre-build
 export async function generateStaticParams() {
   const entries = await contentfulClient.getEntries<BlogPostSkeleton>({
     content_type: 'blogPost',
@@ -36,12 +34,12 @@ export async function generateStaticParams() {
   }));
 }
 
-// 5. This function fetches the data for a *single* post
+// 4. This function fetches the data for a *single* post
 async function getPost(slug: string): Promise<Entry<BlogPostSkeleton> | null> {
   try {
     const entries = await contentfulClient.getEntries<BlogPostSkeleton>({
       content_type: 'blogPost',
-      'fields.slug': slug,
+      'fields.slug': slug, // This filter is correct
       limit: 1,
       include: 2 // This is critical: it tells Contentful to include the image data
     });
@@ -56,7 +54,7 @@ async function getPost(slug: string): Promise<Entry<BlogPostSkeleton> | null> {
   }
 }
 
-// 6. This function generates the page-specific metadata
+// 5. This function generates the page-specific metadata
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const post = await getPost(params.slug);
   
@@ -75,7 +73,8 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   };
 }
 
-// 7. The Page Component (now fully typed and safe)
+
+// 6. The Page Component (now fully typed and safe)
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = await getPost(params.slug);
 
@@ -85,7 +84,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const { title, publishDate, featuredImage, body } = post.fields;
   
-  // 8. Safely get all image properties using optional chaining
+  // 7. Safely get all image properties using optional chaining
   const imageUrl = featuredImage?.fields?.file?.url;
   const fullImageUrl = imageUrl?.startsWith('//') ? `https:${imageUrl}` : imageUrl;
   const imageAlt = featuredImage?.fields?.title || title;
