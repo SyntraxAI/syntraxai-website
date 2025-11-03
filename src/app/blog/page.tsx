@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { contentfulClient } from '@/lib/contentful';
 import type { Asset, Entry, EntrySkeletonType } from 'contentful';
+import { Document } from '@contentful/rich-text-types'; // Make sure this is imported
 
 export const metadata: Metadata = {
   title: 'Blog - Syntrax AI',
@@ -16,10 +17,10 @@ type BlogPostSkeleton = EntrySkeletonType<{
   publishDate: string;
   excerpt: string;
   featuredImage?: Asset<undefined, string>;
-  body: Document; // Document type comes from @contentful/rich-text-types
+  body: Document;
 }>
 
-// Fetch all blog posts using the correct type
+// Fetch all blog posts
 async function getAllPosts() {
   try {
     // 1. We REMOVED the <BlogPostSkeleton> generic from here

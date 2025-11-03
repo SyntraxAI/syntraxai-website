@@ -41,7 +41,7 @@ async function getPost(slug: string): Promise<Entry<BlogPostSkeleton> | null> {
     // 3. We REMOVED the <BlogPostSkeleton> generic from here
     const entries = await contentfulClient.getEntries({
       content_type: 'blogPost',
-      'fields.slug': slug,
+      'fields.slug': slug, // This filter is correct
       limit: 1,
       include: 2
     });
