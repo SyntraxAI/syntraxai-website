@@ -35,6 +35,7 @@ export default async function BlogPage() {
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
             The Syntrax AI Blog
           </h1>
+          {/* THIS IS THE FIXED LINE */}
           <p className="mt-6 text-lg leading-8 text-gray-600">
             Insights on SEO, AI-powered marketing, and business growth.
           </p> 
