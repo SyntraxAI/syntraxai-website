@@ -1,7 +1,8 @@
 import { createOpenAI } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+// 1. We import 'generateText' instead of 'streamText'
+import { generateText } from 'ai';
 
-export const runtime = 'edge';
+export const runtime = 'edge'; 
 
 const openai = createOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -19,17 +20,15 @@ export async function POST(req: Request) {
                  - For custom AI solutions ('AI Accelerator'), offer to schedule a demo (we'll build this later).
                  Keep your answers concise and helpful. Be friendly and professional.`;
 
-    const result = await streamText({
-      model: openai('gpt-4o'),
+    // 2. We use 'generateText' to get the *full* response at once
+    const { text } = await generateText({
+      model: openai('gpt-4o'), // Or gpt-3.5-turbo
       system: systemPrompt,
       messages: messages,
     });
 
-    // --- THIS IS THE FIX ---
-    // Instead of the SDK's 'toTextStreamResponse()',
-    // we return the raw 'textStream' directly.
-    // Our front-end 'TextDecoder' can read this.
-    return new Response(result.textStream);
+    // 3. We return the full text as a simple, non-streamed response
+    return new Response(text);
 
   } catch (error) {
     console.error("Error in /api/chat:", error);

@@ -1,7 +1,5 @@
 "use client";
 
-// 1. We NO LONGER import useChat.
-//    We import useState and FormEvent.
 import { useState, FormEvent } from 'react';
 
 // Define the shape of a message
@@ -12,12 +10,10 @@ type Message = {
 };
 
 export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
-  // 2. We manage ALL state ourselves.
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 3. Our own submit handler that calls our API
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
@@ -31,66 +27,52 @@ export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
     setInputValue('');      // Clear input
     setIsLoading(true);
 
+    // Add the "Typing..." bubble
+    const aiMessageId = `ai-${Date.now()}`;
+    setMessages(prevMessages => [
+      ...prevMessages,
+      { id: aiMessageId, role: 'assistant', content: 'Typing...' },
+    ]);
+
     try {
-      // 4. Call our own API route (which we know works)
+      // 4. Call our API route
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages }), // Send the whole chat history
+        body: JSON.stringify({ messages: newMessages }), 
       });
 
-      if (!response.body) {
-        throw new Error("Response has no body");
+      // 5. THIS IS THE FIX: We are NO LONGER streaming.
+      //    We will read the entire response as text.
+      const fullResponse = await response.text();
+
+      if (!response.ok) {
+        // If the server returned an error (like 500), use its text
+        throw new Error(fullResponse || "An unknown error occurred");
       }
+      
+      // 6. Now that we have the full response, update the "Typing..." message.
+      setMessages(prevMessages => 
+        prevMessages.map(msg => 
+          msg.id === aiMessageId 
+            ? { ...msg, content: fullResponse } // Replace "Typing..." with full response
+            : msg
+        )
+      );
 
-      // Add the empty AI message bubble
-      const aiMessageId = `ai-${Date.now()}`;
-      setMessages(prevMessages => [
-        ...prevMessages,
-        { id: aiMessageId, role: 'assistant', content: '' },
-      ]);
-
-      // 5. Manually read the streaming response
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let accumulatedContent = ""; // We will accumulate the full response here
-
-      while (true) {
-        const { done, value } = await reader.read();
-        
-        if (done) {
-          setIsLoading(false); // Set loading false when stream is done
-          break;
-        }
-        
-        accumulatedContent += decoder.decode(value); // Add new chunk to our accumulator
-        
-        // 6. This is the immutable state update fix
-        setMessages(prevMessages => {
-          // Get all messages *except* the last one
-          const allButLast = prevMessages.slice(0, -1);
-          
-          // Create a *new* last message object with the *total* accumulated content
-          const updatedLastMessage = {
-            ...prevMessages[prevMessages.length - 1],
-            content: accumulatedContent,
-          };
-
-          // Return the new array
-          return [...allButLast, updatedLastMessage];
-        });
-      }
-
-    } catch (error) {
+    } catch (error: any) {
       console.error("Chat fetch error:", error);
-      setIsLoading(false); // Make sure to stop loading on error
-      setMessages(prevMessages => [
-        ...prevMessages.slice(0, -1), // Remove the empty 'typing' bubble
-        { id: 'error', role: 'assistant', content: 'Sorry, I had trouble connecting. Please try again.' },
-      ]);
+      // 7. Update the "Typing..." bubble to show an error
+      setMessages(prevMessages => 
+        prevMessages.map(msg => 
+          msg.id === aiMessageId 
+            ? { ...msg, content: `Sorry, an error occurred: ${error.message}` }
+            : msg
+        )
+      );
     }
 
-    setIsLoading(false); // Final fallback to stop loading
+    setIsLoading(false);
   };
 
   return (
@@ -125,15 +107,15 @@ export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
           <input
             name="message"
             className="flex-grow border border-gray-300 rounded-md p-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
-            value={inputValue} // Use our local state
+            value={inputValue}
             placeholder="Ask a question..."
-            onChange={(e) => setInputValue(e.target.value)} // Simple state update
+            onChange={(e) => setInputValue(e.target.value)}
             disabled={isLoading}
           />
           <button
             type="submit"
             className="bg-blue-600 text-white rounded-md p-2 hover:bg-blue-700 disabled:bg-gray-400"
-            disabled={isLoading || !inputValue.trim()} // Check our local state
+            disabled={isLoading || !inputValue.trim()}
             aria-label="Send message"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
