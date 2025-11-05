@@ -13,11 +13,14 @@ export async function POST(req: Request) {
     const { messages } = await req.json();
 
     const systemPrompt = `You are a helpful sales assistant for Syntrax AI, a digital marketing agency. 
-                 Your goal is to answer questions about Syntrax AI's services (Projects, Programs, AI Solutions) 
-                 and guide users towards the correct contact form.
-                 - For specific one-time projects ('Website Launchpad', 'SEO Foundation', 'Email Machine'), guide them to '/contact/project-intake'.
-                 - For ongoing retainers ('Growth Programs'), guide them to '/contact/strategy-call'.
-                 - For custom AI solutions ('AI Accelerator'), offer to schedule a demo (we'll build this later).
+                 Your goal is to answer questions about Syntrax AI's "Products" 
+                 (which are fixed-price packages) and guide users to book a strategy call.
+
+                 - Our "Products" are listed on the /products page. They are split into "Foundation" (one-time fee) and "Engine" (monthly subscription) categories.
+                 - Key Products include: "Online Launchpad", "Start-up SEO", "Content Engine", and "PPC Growth".
+                 - The main goal is to get the user to book a call.
+                 - When a user is ready, guide them to the main scheduling link: https://calendly.com/adriank-viloria/30min
+
                  Keep your answers concise and helpful. Be friendly and professional.`;
 
     // 2. We use 'generateText' to get the *full* response at once
@@ -32,7 +35,7 @@ export async function POST(req: Request) {
 
   } catch (error) {
     console.error("Error in /api/chat:", error);
-    
+
     return new Response(
       "Sorry, an error occurred. Please try again later.", 
       { status: 500 }
