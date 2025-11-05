@@ -26,9 +26,9 @@ export default async function ProductsPage() {
 
   // Filter products based on the 'category' field
   // @ts-ignore
-  const foundationProducts = allProducts.filter(p => p.fields.category === 'Foundation');
+  const foundationProducts = allProducts.filter(p => p.fields.category && p.fields.category.includes('Foundation'));
   // @ts-ignore
-  const engineProducts = allProducts.filter(p => p.fields.category === 'Engine');
+  const engineProducts = allProducts.filter(p => p.fields.category && p.fields.category.includes('Engine'));
 
   return (
     <main className="bg-white">
