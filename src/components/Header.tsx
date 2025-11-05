@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image'; // <-- 1. IMPORT THE IMAGE COMPONENT
+import Image from 'next/image'; // <-- Import the Image component
 
 // Define the navigation links
 const navLinks = [
@@ -22,13 +22,13 @@ export default function Header() {
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Syntrax AI</span>
-            {/* 2. REPLACE THE TEXT LOGO WITH THE IMAGE */}
+            {/* 1. UPDATED LOGO SIZE */}
             <Image
-              src="/logo.png" // Assumes your file is in /public/logo.png
+              src="/logo.png"
               alt="Syntrax AI Logo"
-              width={120} // You can adjust this
-              height={30} // You can adjust this
-              className="h-8 w-auto" // h-8 matches the original text size
+              width={160} // <-- Increased from 120
+              height={40}  // <-- Increased from 30
+              className="h-10 w-auto" // <-- Increased from h-8
             />
           </Link>
         </div>
@@ -77,13 +77,13 @@ export default function Header() {
             <div className="flex items-center justify-between">
               <Link href="/" className="-m-1.5 p-1.5">
                 <span className="sr-only">Syntrax AI</span>
-                {/* 3. REPLACE THE MOBILE TEXT LOGO WITH THE IMAGE */}
+                {/* 2. UPDATED MOBILE LOGO SIZE */}
                 <Image
                   src="/logo.png"
                   alt="Syntrax AI Logo"
-                  width={120} // You can adjust this
-                  height={30} // You can adjust this
-                  className="h-8 w-auto"
+                  width={160} // <-- Increased from 120
+                  height={40}  // <-- Increased from 30
+                  className="h-10 w-auto" // <-- Increased from h-8
                 />
               </Link>
               <button
