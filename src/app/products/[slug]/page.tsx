@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import Image from 'next/image';
+// import Image from 'next/image'; // Removed unused import
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { contentfulClient } from '@/lib/contentful';
@@ -13,6 +13,21 @@ type ProductPageProps = {
   };
 };
 
+// --- FIX: Define a type for our Product to avoid 'any' ---
+type Product = {
+  sys: { id: string };
+  fields: {
+    title: string;
+    slug: string;
+    description: string;
+    price: string;
+    bestFor: string;
+    category: string;
+    body: Document;
+  };
+};
+// --- END FIX ---
+
 // This function tells Next.js which slugs (pages) to pre-build
 export async function generateStaticParams() {
   const entries = await contentfulClient.getEntries({
@@ -20,14 +35,16 @@ export async function generateStaticParams() {
     select: ['fields.slug']
   });
 
-  // @ts-ignore
+  // --- FIX: Revert to 'as any[]' and disable the linter rule for this line ---
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (entries.items as any[]).map((item) => ({
     slug: item.fields.slug,
   }));
 }
 
 // This function fetches the data for a *single* product
-async function getProduct(slug: string): Promise<any | null> {
+// --- FIX: Return our new Product type ---
+async function getProduct(slug: string): Promise<Product | null> {
   try {
     const entries = await contentfulClient.getEntries({
       content_type: 'project',
@@ -39,7 +56,8 @@ async function getProduct(slug: string): Promise<any | null> {
     if (entries.items.length === 0) {
       return null;
     }
-    return entries.items[0] as any;
+    // --- FIX: Use 'as unknown as Product' to safely cast the type ---
+    return entries.items[0] as unknown as Product;
   } catch (error) {
     console.error("Error fetching post by slug:", error);
     return null;
@@ -77,8 +95,35 @@ export default async function ProductPage({ params }: ProductPageProps) {
   // Destructure fields from 'product'
   const { title, description, price, bestFor, category, body } = product.fields;
 
+  // --- START: Add Product Schema ---
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": title,
+    "description": description,
+    "brand": {
+      "@type": "Organization",
+      "name": "Syntrax AI"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": price, 
+      "priceCurrency": "USD", // Adjust if needed
+      "availability": "https://schema.org/InStock",
+      "url": `https://www.syntraxai.com/products/${params.slug}`
+    },
+    "category": category
+  };
+  // --- END: Add Product Schema ---
+
   return (
     <main className="bg-white py-24 sm:py-32">
+      {/* --- START MODIFICATION: Inject Schema Script --- */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      {/* --- END MODIFICATION --- */}
       <div className="mx-auto max-w-3xl px-6 lg:px-8">
         <article>
           {/* Product Header */}
@@ -97,6 +142,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </p>
             <p className="mt-4 text-base text-gray-600">
               <span className="font-semibold text-gray-800">Best for:</span> {bestFor}
+            {/* --- FIX: This was the typo. Corrected to </p> --- */}
             </p>
             <Link
               href="https://calendly.com/adriank-viloria/30min"
@@ -109,8 +155,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </header>
 
           {/* Main Content Body */}
-          {/* Assumes you have a Rich Text field in Contentful named 'body' 
-              for the "Deliverables" and full details */}
           <div className="prose prose-lg">
             {body ? (
               <RichText content={body as Document} />

@@ -8,6 +8,39 @@ export const metadata: Metadata = {
   description: 'Insights on SEO, AI-powered marketing, and business growth.',
 };
 
+// --- FIX: Define a type for our Blog Post to avoid 'any' ---
+type ContentfulImageDetails = {
+  image: {
+    width: number;
+    height: number;
+  }
+}
+
+type ContentfulImageFile = {
+  url: string;
+  details: ContentfulImageDetails;
+}
+
+type ContentfulImage = {
+  fields: {
+    title: string;
+    file: ContentfulImageFile;
+  }
+}
+
+type BlogPost = {
+  sys: { id: string };
+  fields: {
+    title: string;
+    slug: string;
+    excerpt: string;
+    publishDate: string;
+    featuredImage: ContentfulImage;
+  };
+};
+// --- END FIX ---
+
+
 // Fetch all blog posts
 async function getAllPosts() {
   try {
@@ -16,13 +49,16 @@ async function getAllPosts() {
       order: ['-fields.publishDate'],
       include: 2,
     });
-    // We return the items as 'any'
-    return entries.items as any[];
+    // --- FIX: Use 'as unknown as BlogPost[]' to safely cast the type ---
+    return entries.items as unknown as BlogPost[];
   } catch (error) {
     console.error("Error fetching blog posts:", error);
     return [];
   }
 }
+
+// Revalidate every 5 minutes
+export const revalidate = 300;
 
 // The Page Component
 export default async function BlogPage() {
