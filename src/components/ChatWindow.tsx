@@ -60,17 +60,27 @@ export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
         )
       );
 
-    } catch (error: any) {
+    // --- FIX: Use 'unknown' instead of 'any' and check the type ---
+    } catch (error: unknown) {
       console.error("Chat fetch error:", error);
+      
+      let errorMessage = "An unknown error occurred";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+
       // 7. Update the "Typing..." bubble to show an error
       setMessages(prevMessages => 
         prevMessages.map(msg => 
           msg.id === aiMessageId 
-            ? { ...msg, content: `Sorry, an error occurred: ${error.message}` }
+            ? { ...msg, content: `Sorry, an error occurred: ${errorMessage}` }
             : msg
         )
       );
     }
+    // --- END FIX ---
 
     setIsLoading(false);
   };

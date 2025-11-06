@@ -9,17 +9,25 @@ export default function HomePage() {
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
             Ditch the Retainer. Buy the Result.
           </h1>
+          {/* --- FIX: Escaped apostrophe ' --- */}
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            We're a new kind of agency for SMBs and Start-ups. We’ve productized 
+            We&apos;re a new kind of agency for SMBs and Start-ups. We’ve productized 
             digital marketing into fixed-price packages, so you get exactly what 
             you need, when you need it. No confusing contracts. No surprise fees.
           </p>
+          {/* --- FIX: Replaced single CTA with Dual-CTA --- */}
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Link
-              href="/products"
+              href="/products#foundation"
               className="rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
-              [ See Our Products ]
+              Get Your Foundation
+            </Link>
+            <Link
+              href="/products#engine"
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Scale Your Engine <span aria-hidden="true">→</span>
             </Link>
           </div>
         </div>
@@ -35,7 +43,8 @@ export default function HomePage() {
             <div className="mt-16 grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2">
               {/* Column 1: The "Old" Agency */}
               <div className="rounded-2xl bg-white p-8 shadow-lg">
-                <h3 className="text-2xl font-semibold leading-8 text-gray-900">The "Old" Agency</h3>
+                {/* --- FIX: Escaped quotes " --- */}
+                <h3 className="text-2xl font-semibold leading-8 text-gray-900">The &quot;Old&quot; Agency</h3>
                 <ul role="list" className="mt-8 space-y-3 text-gray-600">
                   <li className="flex gap-x-3">
                     <svg className="h-6 w-5 flex-none text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -47,19 +56,20 @@ export default function HomePage() {
                     <svg className="h-6 w-5 flex-none text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
                     </svg>
-                    <span>Confusing proposals & surprise fees</span>
+                    <span>Confusing proposals &amp; surprise fees</span>
                   </li>
                   <li className="flex gap-x-3">
                     <svg className="h-6 w-5 flex-none text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
                     </svg>
-                    <span>Slow onboarding & delivery</span>
+                    <span>Slow onboarding &amp; delivery</span>
                   </li>
                 </ul>
               </div>
               {/* Column 2: The "Productized" Agency */}
               <div className="rounded-2xl bg-white p-8 shadow-lg">
-                <h3 className="text-2xl font-semibold leading-8 text-gray-900">The "Productized" Agency</h3>
+                {/* --- FIX: Escaped quotes " --- */}
+                <h3 className="text-2xl font-semibold leading-8 text-gray-900">The &quot;Productized&quot; Agency</h3>
                 <ul role="list" className="mt-8 space-y-3 text-gray-600">
                   <li className="flex gap-x-3">
                     <svg className="h-6 w-5 flex-none text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -106,7 +116,8 @@ export default function HomePage() {
             <div className="text-xl font-semibold text-blue-600">02.</div>
             <h3 className="mt-2 text-lg font-semibold text-gray-900">Book Your Strategy Call</h3>
             <p className="mt-2 text-base text-gray-600">
-              Schedule a free 30-minute call. You'll talk to our founder, not a salesperson, 
+              {/* --- FIX: Escaped apostrophe ' --- */}
+              Schedule a free 30-minute call. You&apos;ll talk to our founder, not a salesperson, 
               to confirm the product is a perfect fit.
             </p>
           </div>

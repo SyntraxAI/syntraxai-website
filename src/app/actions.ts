@@ -1,6 +1,9 @@
 "use server"; // This marks all functions in this file as Server Actions
 
 import { Resend } from 'resend';
+import { Ratelimit } from '@upstash/ratelimit'; // Added for rate limiting
+import { Redis } from '@upstash/redis'; // Added for rate limiting
+import { headers } from 'next/headers'; // Added for rate limiting
 
 // Initialize Resend with our API key
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -18,6 +21,32 @@ type AuditFormData = {
 // 2. Create the new Server Action for the audit form
 export async function submitAuditForm(formData: AuditFormData) {
   console.log("Received AI audit form data:", formData);
+
+  // --- START RATE LIMITING ---
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    const redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+
+    const ratelimit = new Ratelimit({
+      redis: redis,
+      limiter: Ratelimit.slidingWindow(3, '1 m'), // 3 requests per 1 minute
+      analytics: true,
+    });
+
+    // --- FIX: Added 'await' before headers() ---
+    const ip = (await headers()).get('x-forwarded-for') ?? '127.0.0.1';
+    
+    // --- FIX: Add eslint-disable comment for unused variables ---
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { success, limit: _limit, remaining: _remaining } = await ratelimit.limit(ip);
+
+    if (!success) {
+      return { success: false, error: "Too many requests. Please try again later." };
+    }
+  }
+  // --- END RATE LIMITING ---
 
   try {
     const { data, error } = await resend.emails.send({

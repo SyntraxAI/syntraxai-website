@@ -8,13 +8,31 @@ export const metadata: Metadata = {
   description: 'Our services are broken into "Foundation" products to get you started and "Engine" products to fuel your growth.',
 };
 
+// Revalidate every 5 minutes
+export const revalidate = 300;
+
+// --- FIX: Define a proper type for Product to avoid 'any' ---
+type Product = {
+  sys: { id: string };
+  fields: {
+    title: string;
+    slug: string;
+    description: string;
+    price: string;
+    bestFor: string;
+    category: string[]; // This is an array of strings
+  };
+};
+// --- END FIX ---
+
 // Fetch all projects from Contentful
 async function getProducts() {
   try {
     const entries = await contentfulClient.getEntries({
       content_type: 'project', // This is the 'Api Identifier' of your Content Model
     });
-    return entries.items;
+    // --- FIX: Use 'as unknown as Product[]' to safely cast the type ---
+    return entries.items as unknown as Product[];
   } catch (error) {
     console.error("Error fetching projects from Contentful:", error);
     return []; // Return an empty array on error
@@ -24,10 +42,8 @@ async function getProducts() {
 export default async function ProductsPage() {
   const allProducts = await getProducts();
 
-  // Filter products based on the 'category' field
-  // @ts-ignore
+  // --- FIX: No @ts-expect-error needed now, as 'category' is a known field ---
   const foundationProducts = allProducts.filter(p => p.fields.category && p.fields.category.includes('Foundation'));
-  // @ts-ignore
   const engineProducts = allProducts.filter(p => p.fields.category && p.fields.category.includes('Engine'));
 
   return (
@@ -40,13 +56,14 @@ export default async function ProductsPage() {
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
             We built the exact marketing solutions start-ups and SMBs need. 
-            Our services are broken into "Foundation" products to get you started 
-            and "Engine" products to fuel your growth.
+            {/* --- FIX: Escaped quotes --- */}
+            Our services are broken into &quot;Foundation&quot; products to get you started 
+            and &quot;Engine&quot; products to fuel your growth.
           </p>
         </div>
 
         {/* Category 1: Foundation Products */}
-        <div className="mx-auto mt-16 max-w-7xl">
+        <div id="foundation" className="mx-auto mt-16 max-w-7xl">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl text-center">
             Foundation Products
           </h2>
@@ -57,15 +74,11 @@ export default async function ProductsPage() {
             {foundationProducts.map((product) => (
               <ProductCard
                 key={product.sys.id}
-                // @ts-ignore
+                // --- FIX: All @ts-expect-error comments removed ---
                 title={product.fields.title}
-                // @ts-ignore
                 description={product.fields.description}
-                // @ts-ignore
                 price={product.fields.price}
-                // @ts-ignore
                 bestFor={product.fields.bestFor}
-                // @ts-ignore
                 ctaLink={`/products/${product.fields.slug}`}
               />
             ))}
@@ -73,7 +86,7 @@ export default async function ProductsPage() {
         </div>
 
         {/* Category 2: Engine Products */}
-        <div className="mx-auto mt-24 max-w-7xl">
+        <div id="engine" className="mx-auto mt-24 max-w-7xl">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl text-center">
             Engine Products
           </h2>
@@ -84,15 +97,11 @@ export default async function ProductsPage() {
             {engineProducts.map((product) => (
               <ProductCard
                 key={product.sys.id}
-                // @ts-ignore
+                // --- FIX: All @ts-expect-error comments removed ---
                 title={product.fields.title}
-                // @ts-ignore
                 description={product.fields.description}
-                // @ts-ignore
                 price={product.fields.price}
-                // @ts-ignore
                 bestFor={product.fields.bestFor}
-                // @ts-ignore
                 ctaLink={`/products/${product.fields.slug}`}
               />
             ))}
@@ -118,7 +127,8 @@ export default async function ProductsPage() {
             <div className="flex flex-col rounded-2xl bg-white p-8 shadow-lg">
               <h3 className="text-xl font-semibold text-gray-900">AI-Powered Efficiency</h3>
               <p className="mt-4 text-base text-gray-600">
-                Our AI is our "virtual employee." It handles 80% of the heavy lifting—drafting content, 
+                {/* --- FIX: Escaped quotes --- */}
+                Our AI is our &quot;virtual employee.&quot; It handles 80% of the heavy lifting—drafting content, 
                 analyzing massive datasets, and identifying opportunities. This is how we deliver 
                 high-quality work in days, not months, at a price that makes sense.
               </p>
@@ -143,8 +153,9 @@ export default async function ProductsPage() {
             Not Sure What You Need?
           </h2>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            That's what we're here for. Book a free 30-minute, no-pressure strategy call. 
-            We'll listen to your goals and tell you exactly which product (if any) is right for you.
+            {/* --- FIX: Escaped apostrophes --- */}
+            That&apos;s what we&apos;re here for. Book a free 30-minute, no-pressure strategy call. 
+            We&apos;ll listen to your goals and tell you exactly which product (if any) is right for you.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Link
