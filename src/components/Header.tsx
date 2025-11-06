@@ -26,9 +26,9 @@ export default function Header() {
             <Image
               src="/logo.png"
               alt="Syntrax AI Logo"
-              width={160} // <-- Increased from 120
-              height={40}  // <-- Increased from 30
-              className="h-10 w-auto" // <-- Increased from h-8
+              width={192} // <-- Increased from 160
+              height={48}  // <-- Increased from 40
+              className="h-12 w-auto" // <-- Increased from h-10
             />
           </Link>
         </div>
@@ -81,9 +81,9 @@ export default function Header() {
                 <Image
                   src="/logo.png"
                   alt="Syntrax AI Logo"
-                  width={160} // <-- Increased from 120
-                  height={40}  // <-- Increased from 30
-                  className="h-10 w-auto" // <-- Increased from h-8
+                  width={192} // <-- Increased from 160
+                  height={48}  // <-- Increased from 40
+                  className="h-12 w-auto" // <-- Increased from h-10
                 />
               </Link>
               <button
