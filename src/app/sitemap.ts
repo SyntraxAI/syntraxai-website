@@ -1,41 +1,81 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from 'next';
+import { contentfulClient } from '@/lib/contentful';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.syntraxai.com'
+// Define a type for the entries we're fetching
+type ContentfulEntry = {
+  fields: {
+    slug: string;
+  };
+  sys: {
+    updatedAt: string;
+  };
+};
 
-  // Note: We'll need to dynamically add product and blog slugs later
-  // For now, this covers the main static pages.
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = 'https://www.syntraxai.com';
 
-  return [
+  // --- 1. Get All Blog Posts ---
+  const blogEntries = await contentfulClient.getEntries({
+    content_type: 'blogPost',
+    select: ['fields.slug', 'sys.updatedAt'],
+  });
+  
+  // --- FIX: Cast to 'unknown' first ---
+  const blogPosts = (blogEntries.items as unknown as ContentfulEntry[]).map((item) => ({
+    url: `${baseUrl}/blog/${item.fields.slug}`,
+    lastModified: new Date(item.sys.updatedAt),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  // --- 2. Get All Products ---
+  const productEntries = await contentfulClient.getEntries({
+    content_type: 'project', // This is the ID for your products
+    select: ['fields.slug', 'sys.updatedAt'],
+  });
+
+  // --- FIX: Cast to 'unknown' first ---
+  const productPosts = (productEntries.items as unknown as ContentfulEntry[]).map((item) => ({
+    url: `${baseUrl}/products/${item.fields.slug}`,
+    lastModified: new Date(item.sys.updatedAt),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }));
+
+  // --- 3. Define Static Pages ---
+  const staticPages = [
     {
       url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'yearly',
+      changeFrequency: 'yearly' as const,
       priority: 1,
     },
     {
-      url: `${baseUrl}/products`, // <-- UPDATED
+      url: `${baseUrl}/products`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.9, // This is your "store", so high priority
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/blog`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'weekly' as const,
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/contact`, // <-- NEW
+      url: `${baseUrl}/contact`,
       lastModified: new Date(),
-      changeFrequency: 'yearly',
+      changeFrequency: 'yearly' as const,
       priority: 0.5,
     },
     {
       url: `${baseUrl}/ai-audit`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'monthly' as const,
       priority: 0.6,
     },
-  ]
+  ];
+
+  // --- 4. Combine and Return All URLs ---
+  return [...staticPages, ...blogPosts, ...productPosts];
 }
