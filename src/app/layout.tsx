@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
-import { Analytics } from "@vercel/analytics/react"; // Vercel Analytics
-import Script from "next/script"; // For Google Tag Manager
 
-// This is the ID from your screenshot
-const GTM_ID = "GTM-PKX47BMM";
+// 1. Import our new ClientLayoutWrapper
+import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
+
+// --- START: ANALYTICS IMPORTS ---
+import { Analytics } from "@vercel/analytics/react"; // Vercel Analytics
+import Script from "next/script"; // For Contentsquare/Hotjar
+// --- END: ANALYTICS IMPORTS ---
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,38 +37,20 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/*
-          --- START: Google Tag Manager (Snippet 1) ---
-          FIX: We are now using strategy="beforeInteractive" to ensure
-          the script is loaded before the page is hydrated,
-          which allows the verification bot to find it.
+          --- START: CONTENTSQUARE/HOTJAR SCRIPT (FINAL ATTEMPT) ---
+          Using Next.js <Script> with the "beforeInteractive" strategy.
+          This injects the script into the initial server-rendered HTML,
+          making it visible to the verification bot.
         */}
-        <Script id="google-tag-manager" strategy="beforeInteractive">
-          {`
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','${GTM_ID}');
-          `}
-        </Script>
-        {/* --- END: Google Tag Manager --- */}
+        <Script
+          id="contentsquare-hotjar-script"
+          strategy="beforeInteractive"
+          src="https://t.contentsquare.net/uxa/D74c101537a8d.js"
+        />
+        {/* --- END: CONTENTSQUARE/HOTJAR SCRIPT --- */}
       </head>
 
       <body className={inter.className}>
-        {/*
-          --- START: Google Tag Manager (Snippet 2 - noscript) ---
-          This is the <noscript> tag, placed just after the <body> tag.
-        */}
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          ></iframe>
-        </noscript>
-        {/* --- END: Google Tag Manager (noscript) --- */}
-
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
@@ -76,9 +60,10 @@ export default function RootLayout({
           {children}
         </ClientLayoutWrapper>
 
-        {/* --- START: Vercel Analytics --- */}
+        {/* --- START: VERCEL ANALYTICS SCRIPT --- */}
         <Analytics />
-        {/* --- END: Vercel Analytics --- */}
+        {/* --- END: VERCEL ANALYTICS SCRIPT --- */}
+
       </body>
     </html>
   );
