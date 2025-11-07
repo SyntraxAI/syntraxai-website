@@ -7,7 +7,7 @@ import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
 
 // --- START: ANALYTICS IMPORTS ---
 import { Analytics } from "@vercel/analytics/react"; // Vercel Analytics
-import Script from "next/script"; // For Contentsquare/Hotjar
+// We no longer need the 'Script' import
 // --- END: ANALYTICS IMPORTS ---
 
 const inter = Inter({ subsets: ["latin"] });
@@ -35,19 +35,19 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      {/*
-        --- START: CONTENTSQUARE/HOTJAR SCRIPT ---
-        We are placing this in the <head> as requested
-        by their installation instructions.
-      */}
       <head>
-        <Script
-          id="contentsquare-hotjar-script"
-          strategy="afterInteractive"
+        {/*
+          --- START: CONTENTSQUARE/HOTJAR SCRIPT ---
+          Pasting the tag directly in the <head> as requested by the documentation.
+          This replaces the Next.js <Script> component.
+        */}
+        <script 
           src="https://t.contentsquare.net/uxa/D74c101537a8d.js"
-        />
+          async // Use async for performance
+          defer // Use defer for performance
+        ></script>
+        {/* --- END: CONTENTSQUARE/HOTJAR SCRIPT --- */}
       </head>
-      {/* --- END: CONTENTSQUARE/HOTJAR SCRIPT --- */}
 
       <body className={inter.className}>
         <script
