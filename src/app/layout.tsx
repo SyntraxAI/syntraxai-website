@@ -36,10 +36,11 @@ export default function RootLayout({
       <head>
         {/*
           --- START: Google Tag Manager (Snippet 1) ---
-          This script is placed in the <head> as requested.
-          We use Next.js <Script> component for performance.
+          FIX: We are now using strategy="beforeInteractive" to ensure
+          the script is loaded before the page is hydrated,
+          which allows the verification bot to find it.
         */}
-        <Script id="google-tag-manager" strategy="afterInteractive">
+        <Script id="google-tag-manager" strategy="beforeInteractive">
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
