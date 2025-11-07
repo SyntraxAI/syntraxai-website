@@ -4,6 +4,9 @@ import { documentToReactComponents, Options } from '@contentful/rich-text-react-
 import { BLOCKS, INLINES, Document } from '@contentful/rich-text-types';
 import Image from 'next/image';
 
+// --- 1. Import our new component ---
+import EmbeddedCTA from './EmbeddedCTA';
+
 // This component parses the JSON from Contentful's Rich Text field
 // and renders it as HTML with proper styling.
 
@@ -72,6 +75,22 @@ const options: Options = {
           />
         </div>
       );
+    },
+
+    // --- 2. RENDER OUR NEW EMBEDDED CTA COMPONENT ---
+    [BLOCKS.EMBEDDED_ENTRY]: (node) => {
+      // Check if it's our new "Embedded CTA" type
+      if (node.data.target.sys.contentType.sys.id === 'embeddedCta') {
+        const { headline, subtext, buttonText } = node.data.target.fields;
+        return (
+          <EmbeddedCTA
+            headline={headline}
+            subtext={subtext}
+            buttonText={buttonText}
+          />
+        );
+      }
+      return null; // Don't render other embedded entry types for now
     },
   },
 };
