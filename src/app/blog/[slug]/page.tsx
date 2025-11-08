@@ -5,6 +5,12 @@ import { contentfulClient } from '@/lib/contentful';
 import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
 
+// --- THIS IS THE FIX ---
+// This tells Vercel to re-fetch the content every 5 minutes (300 seconds)
+// This will fix the stale slug bug and make future edits appear automatically.
+export const revalidate = 300;
+// --- END FIX ---
+
 // 1. Define the props for this page
 type BlogPostPageProps = {
   params: {
@@ -12,26 +18,23 @@ type BlogPostPageProps = {
   };
 };
 
-// --- FIX: Define a type for our Blog Post to avoid 'any' ---
+// --- (Type Definitions) ---
 type ContentfulImageDetails = {
   image: {
     width: number;
     height: number;
   }
 }
-
 type ContentfulImageFile = {
   url: string;
   details: ContentfulImageDetails;
 }
-
 type ContentfulImage = {
   fields: {
     title: string;
     file: ContentfulImageFile;
   }
 }
-
 type BlogPost = {
   sys: { id: string };
   fields: {
@@ -43,7 +46,7 @@ type BlogPost = {
     body: Document;
   };
 };
-// --- END FIX ---
+// --- (End Type Definitions) ---
 
 
 // 2. This function tells Next.js which slugs (pages) to pre-build
@@ -53,7 +56,6 @@ export async function generateStaticParams() {
     select: ['fields.slug']
   });
   
-  // --- FIX: Revert to 'as any[]' and disable the linter rule for this line ---
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (entries.items as any[]).map((item) => ({
     slug: item.fields.slug,
@@ -61,7 +63,6 @@ export async function generateStaticParams() {
 }
 
 // 4. This function fetches the data for a *single* post
-// --- FIX: Return our new BlogPost type ---
 async function getPost(slug: string): Promise<BlogPost | null> {
   try {
     const entries = await contentfulClient.getEntries({
@@ -74,7 +75,6 @@ async function getPost(slug: string): Promise<BlogPost | null> {
     if (entries.items.length === 0) {
       return null;
     }
-    // --- FIX: Use 'as unknown as BlogPost' to safely cast the type ---
     return entries.items[0] as unknown as BlogPost;
   } catch (error) {
     console.error("Error fetching post by slug:", error);
@@ -119,7 +119,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const imageWidth = featuredImage?.fields?.file?.details?.image?.width;
   const imageHeight = featuredImage?.fields?.file?.details?.image?.height;
 
-  // --- START MODIFICATION: Add Article Schema ---
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -134,21 +133,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       "name": "Syntrax AI",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.syntraxai.com/logo.png" // Assuming logo is here
+        "url": "https://www.syntraxai.com/logo.png" 
       }
     },
-    "image": fullImageUrl || "" // Add the image URL or an empty string
+    "image": fullImageUrl || "" 
   };
-  // --- END MODIFICATION ---
 
   return (
     <main className="bg-white py-24 sm:py-32">
-      {/* --- START MODIFICATION: Inject Schema Script --- */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      {/* --- END MODIFICATION --- */}
       <div className="mx-auto max-w-3xl px-6 lg:px-8">
         <article>
           <header className="mb-12">

@@ -6,6 +6,11 @@ import { contentfulClient } from '@/lib/contentful';
 import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
 
+// --- THIS IS THE FIX ---
+// We add ISR to product pages as well.
+export const revalidate = 300;
+// --- END FIX ---
+
 // Define the props for this page
 type ProductPageProps = {
   params: {
@@ -13,7 +18,7 @@ type ProductPageProps = {
   };
 };
 
-// --- FIX: Define a type for our Product to avoid 'any' ---
+// --- (Type Definitions) ---
 type Product = {
   sys: { id: string };
   fields: {
@@ -26,16 +31,15 @@ type Product = {
     body: Document;
   };
 };
-// --- END FIX ---
+// --- (End Type Definitions) ---
 
 // This function tells Next.js which slugs (pages) to pre-build
 export async function generateStaticParams() {
   const entries = await contentfulClient.getEntries({
-    content_type: 'project', // Still uses 'project' content type ID
+    content_type: 'project', 
     select: ['fields.slug']
   });
 
-  // --- FIX: Revert to 'as any[]' and disable the linter rule for this line ---
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (entries.items as any[]).map((item) => ({
     slug: item.fields.slug,
@@ -43,7 +47,6 @@ export async function generateStaticParams() {
 }
 
 // This function fetches the data for a *single* product
-// --- FIX: Return our new Product type ---
 async function getProduct(slug: string): Promise<Product | null> {
   try {
     const entries = await contentfulClient.getEntries({
@@ -56,7 +59,6 @@ async function getProduct(slug: string): Promise<Product | null> {
     if (entries.items.length === 0) {
       return null;
     }
-    // --- FIX: Use 'as unknown as Product' to safely cast the type ---
     return entries.items[0] as unknown as Product;
   } catch (error) {
     console.error("Error fetching post by slug:", error);
@@ -108,7 +110,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     "offers": {
       "@type": "Offer",
       "price": price, 
-      "priceCurrency": "USD", // Adjust if needed
+      "priceCurrency": "USD", 
       "availability": "https://schema.org/InStock",
       "url": `https://www.syntraxai.com/products/${params.slug}`
     },
@@ -118,12 +120,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <main className="bg-white py-24 sm:py-32">
-      {/* --- START MODIFICATION: Inject Schema Script --- */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
-      {/* --- END MODIFICATION --- */}
       <div className="mx-auto max-w-3xl px-6 lg:px-8">
         <article>
           {/* Product Header */}
@@ -142,7 +142,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </p>
             <p className="mt-4 text-base text-gray-600">
               <span className="font-semibold text-gray-800">Best for:</span> {bestFor}
-            {/* --- FIX: This was the typo. Corrected to </p> --- */}
             </p>
             <Link
               href="https://calendly.com/adriank-viloria/30min"
