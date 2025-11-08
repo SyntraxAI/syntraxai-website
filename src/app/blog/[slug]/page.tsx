@@ -104,7 +104,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { title, publishDate, featuredImage, body } = post.fields;
   
   const imageUrl = featuredImage?.fields?.file?.url;
-  const fullImageUrl = imageUrl?.startsWith('//') ? `https://S{imageUrl}` : imageUrl;
+  
+  // --- THIS IS THE FIX ---
+  // Corrected the typo from `https://S{imageUrl}` to `https://${imageUrl}`
+  const fullImageUrl = imageUrl?.startsWith('//') ? `https:${imageUrl}` : imageUrl;
+  // --- END FIX ---
+  
   const imageAlt = featuredImage?.fields?.title || title;
   const imageWidth = featuredImage?.fields?.file?.details?.image?.width;
   const imageHeight = featuredImage?.fields?.file?.details?.image?.height;
