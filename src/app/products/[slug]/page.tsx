@@ -1,24 +1,20 @@
 import { Metadata } from 'next';
-// import Image from 'next/image'; // Removed unused import
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { contentfulClient } from '@/lib/contentful';
 import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
 
-// --- THIS IS THE FIX ---
-// We add ISR to product pages as well.
-export const revalidate = 300;
-// --- END FIX ---
+// Force dynamic rendering and no data caching
+export const dynamic = 'force-dynamic';
 
-// Define the props for this page
 type ProductPageProps = {
   params: {
     slug: string;
   };
 };
 
-// --- (Type Definitions) ---
+// (Type Definitions)
 type Product = {
   sys: { id: string };
   fields: {
@@ -31,30 +27,24 @@ type Product = {
     body: Document;
   };
 };
-// --- (End Type Definitions) ---
+// (End Type Definitions)
 
-// This function tells Next.js which slugs (pages) to pre-build
-export async function generateStaticParams() {
-  const entries = await contentfulClient.getEntries({
-    content_type: 'project', 
-    select: ['fields.slug']
-  });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (entries.items as any[]).map((item) => ({
-    slug: item.fields.slug,
-  }));
-}
+// Commented out to force dynamic rendering
+// export async function generateStaticParams() { ... }
 
 // This function fetches the data for a *single* product
 async function getProduct(slug: string): Promise<Product | null> {
   try {
+    // --- THIS IS THE FIX ---
+    // We are REMOVING the invalid 'next' property
     const entries = await contentfulClient.getEntries({
       content_type: 'project',
       'fields.slug': slug,
       limit: 1,
       include: 2
     });
+    // --- END FIX ---
 
     if (entries.items.length === 0) {
       return null;
@@ -97,7 +87,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
   // Destructure fields from 'product'
   const { title, description, price, bestFor, category, body } = product.fields;
 
-  // --- START: Add Product Schema ---
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -116,7 +105,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
     },
     "category": category
   };
-  // --- END: Add Product Schema ---
 
   return (
     <main className="bg-white py-24 sm:py-32">
