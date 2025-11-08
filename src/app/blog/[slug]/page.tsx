@@ -5,8 +5,12 @@ import { contentfulClient } from '@/lib/contentful';
 import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
 
-// This forces the page to be dynamically rendered (SSR) on every request.
-export const revalidate = 0;
+// --- THIS IS THE FINAL FIX ---
+// This is the most powerful Next.js command to prevent caching.
+// It forces the page to be 100% dynamic, bypassing Vercel's
+// stale data cache and fixing the routing bug.
+export const dynamic = 'force-dynamic';
+// --- END FIX ---
 
 // 1. Define the props for this page
 type BlogPostPageProps = {
@@ -67,7 +71,6 @@ async function getPost(slug: string): Promise<BlogPost | null> {
       'fields.slug': slug,
       limit: 1,
       include: 2
-      // --- THIS IS THE FIX: The 'cache: no-store' line has been removed ---
     });
     
     if (entries.items.length === 0) {
