@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { contentfulClient } from '@/lib/contentful';
 import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
+// --- THIS IS THE FIX (Step 1) ---
+import { unstable_noStore as noStore } from 'next/cache';
 
 // Force dynamic rendering and no data caching
 export const dynamic = 'force-dynamic';
@@ -35,16 +37,18 @@ type Product = {
 
 // This function fetches the data for a *single* product
 async function getProduct(slug: string): Promise<Product | null> {
+  // --- THIS IS THE FIX (Step 2) ---
+  // This command forces Next.js to bypass its data cache
+  noStore();
+  // --- END FIX ---
+  
   try {
-    // --- THIS IS THE FIX ---
-    // We are REMOVING the invalid 'next' property
     const entries = await contentfulClient.getEntries({
       content_type: 'project',
       'fields.slug': slug,
       limit: 1,
       include: 2
     });
-    // --- END FIX ---
 
     if (entries.items.length === 0) {
       return null;
@@ -62,7 +66,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
   if (!product) {
     return {
-      title: 'Post Not Found',
+      title: 'Product Not Found',
     };
   }
 
@@ -78,7 +82,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 // The Page Component
 export default async function ProductPage({ params }: ProductPageProps) {
-  const product = await getProduct(params.slug);
+  const product = await getPost(params.slug);
 
   if (!product) {
     notFound();
