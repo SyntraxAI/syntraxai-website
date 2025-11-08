@@ -6,9 +6,9 @@ import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
 
 // --- THIS IS THE FIX ---
-// This tells Vercel to re-fetch the content every 5 minutes (300 seconds)
-// This will fix the stale slug bug and make future edits appear automatically.
-export const revalidate = 300;
+// This forces the page to be dynamically rendered (SSR) on every request.
+// It will bypass Vercel's stale static cache.
+export const revalidate = 0;
 // --- END FIX ---
 
 // 1. Define the props for this page
@@ -49,18 +49,20 @@ type BlogPost = {
 // --- (End Type Definitions) ---
 
 
-// 2. This function tells Next.js which slugs (pages) to pre-build
-export async function generateStaticParams() {
-  const entries = await contentfulClient.getEntries({
-    content_type: 'blogPost',
-    select: ['fields.slug']
-  });
+// --- FIX: We are commenting this out to force dynamic rendering ---
+// // 2. This function tells Next.js which slugs (pages) to pre-build
+// export async function generateStaticParams() {
+//   const entries = await contentfulClient.getEntries({
+//     content_type: 'blogPost',
+//     select: ['fields.slug']
+//   });
   
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (entries.items as any[]).map((item) => ({
-    slug: item.fields.slug,
-  }));
-}
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   return (entries.items as any[]).map((item) => ({
+//     slug: item.fields.slug,
+//   }));
+// }
+// --- END FIX ---
 
 // 4. This function fetches the data for a *single* post
 async function getPost(slug: string): Promise<BlogPost | null> {
@@ -69,7 +71,9 @@ async function getPost(slug: string): Promise<BlogPost | null> {
       content_type: 'blogPost',
       'fields.slug': slug,
       limit: 1,
-      include: 2
+      include: 2,
+      // Tell Contentful to fetch fresh data, not from its cache
+      'cache': 'no-store' 
     });
     
     if (entries.items.length === 0) {
