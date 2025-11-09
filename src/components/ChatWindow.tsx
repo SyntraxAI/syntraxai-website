@@ -3,9 +3,8 @@
 //
 "use client";
 
-// 1. Import the useChat hook
-import { useChat } from '@ai-sdk/react';
-// ⛔️ FIX: Removed unused 'FormEvent' import
+// ⛔️ FIX: Changed the import path to 'ai/react' to match your package version
+import { useChat } from 'ai/react'; 
 import { useEffect, useRef } from 'react';
 
 export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
