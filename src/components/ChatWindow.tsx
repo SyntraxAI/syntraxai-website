@@ -3,11 +3,13 @@
 //
 "use client";
 
-import { useChat } from '@ai-sdk/react'; // <-- CORRECT V3 IMPORT
+// ⛔️ FIX: This is the correct import path for the 'ai' v3 package
+import { useChat } from 'ai/react'; 
 import { useEffect, useRef } from 'react';
 
 export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
 
+  // This line will now work, as the hook from 'ai/react' includes these properties
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
