@@ -6,21 +6,16 @@ import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
 import { unstable_noStore as noStore } from 'next/cache';
 
-// --- THIS IS THE FIX ---
-// This is the most powerful Next.js command to prevent caching.
-// It forces the page to be 100% dynamic, bypassing Vercel's
-// stale data cache and fixing the routing bug.
+// This forces the page to be 100% dynamic
 export const dynamic = 'force-dynamic';
-// --- END FIX ---
 
-// 1. Define the props for this page
 type BlogPostPageProps = {
   params: {
     slug: string;
   };
 };
 
-// --- (Type Definitions) ---
+// (Type Definitions)
 type ContentfulImageDetails = {
   image: {
     width: number;
@@ -48,23 +43,11 @@ type BlogPost = {
     body: Document;
   };
 };
-// --- (End Type Definitions) ---
+// (End Type Definitions)
 
 
-// --- FIX: We are commenting this out to force dynamic rendering ---
-// // 2. This function tells Next.js which slugs (pages) to pre-build
-// export async function generateStaticParams() {
-//   const entries = await contentfulClient.getEntries({
-//     content_type: 'blogPost',
-//     select: ['fields.slug']
-//   });
-  
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   return (entries.items as any[]).map((item) => ({
-//     slug: item.fields.slug,
-//   }));
-// }
-// --- END FIX ---
+// Commented out to force dynamic rendering
+// export async function generateStaticParams() { ... }
 
 // 4. This function fetches the data for a *single* post
 async function getPost(slug: string): Promise<BlogPost | null> {
@@ -72,7 +55,6 @@ async function getPost(slug: string): Promise<BlogPost | null> {
   noStore();
   
   try {
-    // --- FIX: The invalid 'cache' and 'next' properties are GONE ---
     const entries = await contentfulClient.getEntries({
       content_type: 'blogPost',
       'fields.slug': slug,
@@ -180,7 +162,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           )}
 
-          <div className="prose prose-lg">
+          {/* --- THIS IS THE FIX --- */}
+          {/* We remove "prose prose-lg" to allow our renderer to work */}
+          <div>
+          {/* --- END FIX --- */}
             <RichText content={body as Document} />
           </div>
         </article>
