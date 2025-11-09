@@ -1,16 +1,15 @@
 //
 // ⬇️ PASTE THIS CODE INTO: src/app/api/chat/route.ts ⬇️
 //
-import { createOpenAI } from '@ai-sdk/openai';
+import { openai } from 'ai/openai'; // <-- CORRECT V3 IMPORT
 import { streamText } from 'ai'; 
 import { Ratelimit } from '@upstash/ratelimit'; 
 import { Redis } from '@upstash/redis'; 
 
 export const runtime = 'edge'; 
 
-const openai = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// NOTE: The 'ai/openai' provider reads the API key automatically
+// from the OPENAI_API_KEY environment variable.
 
 export async function POST(req: Request) {
   // --- START RATE LIMITING ---
@@ -43,7 +42,7 @@ export async function POST(req: Request) {
     const systemPrompt = `You are a helpful sales assistant for Syntrax AI. ... [system prompt unchanged] ...`;
 
     const result = await streamText({
-      model: openai('gpt-4o'), 
+      model: openai('gpt-4o'), // <-- This now works
       system: systemPrompt,
       messages: messages,
     });

@@ -3,8 +3,7 @@
 //
 "use client";
 
-// This is the correct V3 import path
-import { useChat } from '@ai-sdk/react'; 
+import { useChat } from 'ai/react'; // <-- CORRECT V3 IMPORT
 import { useEffect, useRef } from 'react';
 
 export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
