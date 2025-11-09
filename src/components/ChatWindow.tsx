@@ -3,8 +3,8 @@
 //
 "use client";
 
-// ⛔️ FIX: This is the correct import path for the hook
-import { useChat } from '@ai-sdk/react'; 
+// ⛔️ FIX: This is the correct import path for the 'ai' v3 package
+import { useChat } from 'ai/react'; 
 import { useEffect, useRef } from 'react';
 
 export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
