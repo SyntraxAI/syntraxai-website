@@ -6,7 +6,7 @@ import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
 import { unstable_noStore as noStore } from 'next/cache';
 
-// Force dynamic rendering and no data caching
+// --- FIX 1: Force dynamic rendering to bypass Vercel's page cache ---
 export const dynamic = 'force-dynamic';
 
 type ProductPageProps = {
@@ -36,7 +36,7 @@ type Product = {
 
 // This function fetches the data for a *single* product
 async function getProduct(slug: string): Promise<Product | null> {
-  // This command forces Next.js to bypass its data cache
+  // --- FIX 2: Force data re-fetch to bypass Vercel's data cache ---
   noStore();
   
   try {
@@ -109,13 +109,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <main className="bg-white py-24 sm:py-32">
-      {/* --- THIS IS THE FIX --- */}
-      {/* Changed 'typepre' to 'type' */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
-      {/* --- END FIX --- */}
       <div className="mx-auto max-w-3xl px-6 lg:px-8">
         <article>
           {/* Product Header */}
@@ -145,7 +142,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </Link>
           </header>
 
-          {/* We remove "prose prose-lg" to allow our renderer to work */}
+          {/* --- FIX 3: Removed "prose prose-lg" to fix styling bug --- */}
           <div>
             {body ? (
               <RichText content={body as Document} />
