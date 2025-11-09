@@ -1,17 +1,15 @@
 //
 // ⬇️ PASTE THIS CODE INTO: src/app/api/chat/route.ts ⬇️
 //
-import { createOpenAI } from '@ai-sdk/openai'; // <-- ⛔️ THIS IS THE CORRECTED IMPORT
+import { openai } from 'ai/openai'; // <-- CORRECT V3 IMPORT
 import { streamText } from 'ai'; 
 import { Ratelimit } from '@upstash/ratelimit'; 
 import { Redis } from '@upstash/redis'; 
 
 export const runtime = 'edge'; 
 
-// Create the OpenAI client
-const openai = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// NOTE: The 'ai/openai' provider reads the API key automatically
+// from the OPENAI_API_KEY environment variable.
 
 export async function POST(req: Request) {
   // --- START RATE LIMITING ---
