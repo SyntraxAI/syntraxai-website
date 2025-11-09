@@ -79,6 +79,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 // The Page Component
 export default async function ProductPage({ params }: ProductPageProps) {
+  // --- FIX 4: Corrected function name 'getPost' to 'getProduct' ---
   const product = await getProduct(params.slug);
 
   if (!product) {
@@ -109,6 +110,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <main className="bg-white py-24 sm:py-32">
+      {/* --- FIX 5: Corrected typo 'typepre' to 'type' --- */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
