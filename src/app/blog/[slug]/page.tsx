@@ -1,13 +1,16 @@
+//
+// ⬇️ PASTE THIS CODE INTO: src/app/blog/[slug]/page.tsx ⬇️
+//
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { contentfulClient } from '@/lib/contentful';
 import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
-import { unstable_noStore as noStore } from 'next/cache';
+// import { unstable_noStore as noStore } from 'next/cache'; // ⛔️ REMOVED
 
-// --- FIX 1: Force dynamic rendering to bypass Vercel's page cache ---
-export const dynamic = 'force-dynamic';
+// --- FIX 1: We are NO LONGER forcing dynamic rendering ---
+// export const dynamic = 'force-dynamic'; // ⛔️ REMOVED
 
 type BlogPostPageProps = {
   params: {
@@ -45,14 +48,29 @@ type BlogPost = {
 };
 // (End Type Definitions)
 
+// --- FIX 2: Add generateStaticParams to build all posts at build time ---
+export async function generateStaticParams() {
+  try {
+    const entries = await contentfulClient.getEntries({
+      content_type: 'blogPost',
+      select: ['fields.slug'],
+    });
 
-// Commented out to force dynamic rendering
-// export async function generateStaticParams() { ... }
+    const posts = (entries.items as unknown as { fields: { slug: string } }[]);
+
+    return posts.map((post) => ({
+      slug: post.fields.slug,
+    }));
+  } catch (error) {
+    console.error("Error fetching slugs for generateStaticParams:", error);
+    return [];
+  }
+}
 
 async function getPost(slug: string): Promise<BlogPost | null> {
-  // --- FIX 2: Force data re-fetch to bypass Vercel's data cache ---
-  noStore();
-  
+  // --- FIX 3: Removed noStore() to allow caching ---
+  // noStore(); // ⛔️ REMOVED
+
   try {
     const entries = await contentfulClient.getEntries({
       content_type: 'blogPost',
@@ -60,7 +78,7 @@ async function getPost(slug: string): Promise<BlogPost | null> {
       limit: 1,
       include: 2
     });
-    
+
     if (entries.items.length === 0) {
       return null;
     }
@@ -73,7 +91,7 @@ async function getPost(slug: string): Promise<BlogPost | null> {
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const post = await getPost(params.slug);
-  
+
   if (!post) {
     return {
       title: 'Post Not Found',
@@ -98,7 +116,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const { title, publishDate, featuredImage, body } = post.fields;
-  
+
   const imageUrl = featuredImage?.fields?.file?.url;
   const fullImageUrl = imageUrl?.startsWith('//') ? `https:${imageUrl}` : imageUrl;
   const imageAlt = featuredImage?.fields?.title || title;
@@ -158,7 +176,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           )}
 
-          {/* --- FIX 3: Removed "prose prose-lg" to fix styling bug --- */}
           <div>
             <RichText content={body as Document} />
           </div>

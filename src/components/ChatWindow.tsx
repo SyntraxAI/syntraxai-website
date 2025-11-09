@@ -1,89 +1,24 @@
+//
+// ⬇️ PASTE THIS CODE INTO: src/components/ChatWindow.tsx ⬇️
+//
 "use client";
 
-import { useState, FormEvent } from 'react';
-
-// Define the shape of a message
-type Message = {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-};
+// 1. Import the useChat hook
+import { useChat } from '@ai-sdk/react';
+import { FormEvent, useEffect, useRef } from 'react';
 
 export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!inputValue.trim()) return;
+  // 2. Use the hook to manage all chat state
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
 
-    const newMessages: Message[] = [
-      ...messages,
-      { id: Date.now().toString(), role: 'user', content: inputValue },
-    ];
-    
-    setMessages(newMessages); // Add user message to UI
-    setInputValue('');      // Clear input
-    setIsLoading(true);
+  // 3. Add a ref to auto-scroll the chat
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    // Add the "Typing..." bubble
-    const aiMessageId = `ai-${Date.now()}`;
-    setMessages(prevMessages => [
-      ...prevMessages,
-      { id: aiMessageId, role: 'assistant', content: 'Typing...' },
-    ]);
-
-    try {
-      // 4. Call our API route
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages }), 
-      });
-
-      // 5. THIS IS THE FIX: We are NO LONGER streaming.
-      //    We will read the entire response as text.
-      const fullResponse = await response.text();
-
-      if (!response.ok) {
-        // If the server returned an error (like 500), use its text
-        throw new Error(fullResponse || "An unknown error occurred");
-      }
-      
-      // 6. Now that we have the full response, update the "Typing..." message.
-      setMessages(prevMessages => 
-        prevMessages.map(msg => 
-          msg.id === aiMessageId 
-            ? { ...msg, content: fullResponse } // Replace "Typing..." with full response
-            : msg
-        )
-      );
-
-    // --- FIX: Use 'unknown' instead of 'any' and check the type ---
-    } catch (error: unknown) {
-      console.error("Chat fetch error:", error);
-      
-      let errorMessage = "An unknown error occurred";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      } else if (typeof error === 'string') {
-        errorMessage = error;
-      }
-
-      // 7. Update the "Typing..." bubble to show an error
-      setMessages(prevMessages => 
-        prevMessages.map(msg => 
-          msg.id === aiMessageId 
-            ? { ...msg, content: `Sorry, an error occurred: ${errorMessage}` }
-            : msg
-        )
-      );
-    }
-    // --- END FIX ---
-
-    setIsLoading(false);
-  };
+  useEffect(() => {
+    // Scroll to the bottom every time messages change
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <div className="bg-white rounded-lg shadow-xl w-80 h-96 flex flex-col border border-gray-200">
@@ -102,30 +37,35 @@ export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
         {messages.length === 0 && (
           <p className="text-gray-500 text-center mt-4">Ask me about Syntrax AI services!</p>
         )}
+
+        {/* 4. Map over the messages from the hook */}
         {messages.map(m => (
           <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`rounded-lg px-3 py-2 max-w-[80%] ${m.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
+            <div className={`rounded-lg px-3 py-2 max-w-[80%] whitespace-pre-wrap ${m.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
               {m.content}
             </div>
           </div>
         ))}
+
+        {/* This empty div is the target for auto-scrolling */}
+        <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Form */}
+      {/* 5. Wire the form to the hook's handleSubmit */}
       <form onSubmit={handleSubmit} className="p-3 border-t border-gray-200">
         <div className="flex items-center space-x-2">
           <input
             name="message"
             className="flex-grow border border-gray-300 rounded-md p-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
-            value={inputValue}
+            value={input} // 6. Use 'input' from the hook
             placeholder="Ask a question..."
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={handleInputChange} // 7. Use 'handleInputChange' from the hook
             disabled={isLoading}
           />
           <button
             type="submit"
             className="bg-blue-600 text-white rounded-md p-2 hover:bg-blue-700 disabled:bg-gray-400"
-            disabled={isLoading || !inputValue.trim()}
+            disabled={isLoading}
             aria-label="Send message"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">

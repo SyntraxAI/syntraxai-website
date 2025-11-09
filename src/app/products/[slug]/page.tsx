@@ -1,13 +1,16 @@
+//
+// ⬇️ PASTE THIS CODE INTO: src/app/products/[slug]/page.tsx ⬇️
+//
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { contentfulClient } from '@/lib/contentful';
 import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
-import { unstable_noStore as noStore } from 'next/cache';
+// import { unstable_noStore as noStore } from 'next/cache'; // ⛔️ REMOVED
 
-// --- FIX 1: Force dynamic rendering to bypass Vercel's page cache ---
-export const dynamic = 'force-dynamic';
+// --- FIX 1: We are NO LONGER forcing dynamic rendering ---
+// export const dynamic = 'force-dynamic'; // ⛔️ REMOVED
 
 type ProductPageProps = {
   params: {
@@ -30,15 +33,30 @@ type Product = {
 };
 // (End Type Definitions)
 
+// --- FIX 2: Add generateStaticParams to build all products at build time ---
+export async function generateStaticParams() {
+  try {
+    const entries = await contentfulClient.getEntries({
+      content_type: 'project', // This is the ID for your products
+      select: ['fields.slug'],
+    });
 
-// Commented out to force dynamic rendering
-// export async function generateStaticParams() { ... }
+    const products = (entries.items as unknown as { fields: { slug: string } }[]);
+
+    return products.map((product) => ({
+      slug: product.fields.slug,
+    }));
+  } catch (error) {
+    console.error("Error fetching product slugs for generateStaticParams:", error);
+    return [];
+  }
+}
 
 // This function fetches the data for a *single* product
 async function getProduct(slug: string): Promise<Product | null> {
-  // --- FIX 2: Force data re-fetch to bypass Vercel's data cache ---
-  noStore();
-  
+  // --- FIX 3: Force data re-fetch to bypass Vercel's data cache ---
+  // noStore(); // ⛔️ REMOVED
+
   try {
     const entries = await contentfulClient.getEntries({
       content_type: 'project',
@@ -76,10 +94,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   };
 }
 
-
 // The Page Component
 export default async function ProductPage({ params }: ProductPageProps) {
-  // --- FIX 4: Corrected function name 'getPost' to 'getProduct' ---
   const product = await getProduct(params.slug);
 
   if (!product) {
@@ -90,7 +106,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { title, description, price, bestFor, category, body } = product.fields;
 
   const productSchema = {
-    "@context": "https://schema.org",
+    "@context": "https:schema.org",
     "@type": "Product",
     "name": title,
     "description": description,
@@ -102,7 +118,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       "@type": "Offer",
       "price": price, 
       "priceCurrency": "USD", 
-      "availability": "https://schema.org/InStock",
+      "availability": "https:schema.org/InStock",
       "url": `https://www.syntraxai.com/products/${params.slug}`
     },
     "category": category
@@ -110,7 +126,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <main className="bg-white py-24 sm:py-32">
-      {/* --- FIX 5: Corrected typo 'typepre' to 'type' --- */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
@@ -144,7 +159,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </Link>
           </header>
 
-          {/* --- FIX 3: Removed "prose prose-lg" to fix styling bug --- */}
           <div>
             {body ? (
               <RichText content={body as Document} />
