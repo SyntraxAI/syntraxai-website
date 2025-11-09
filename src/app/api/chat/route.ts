@@ -3,7 +3,7 @@
 //
 import { createOpenAI } from '@ai-sdk/openai';
 // 1. We import 'streamText' and 'StreamingTextResponse'
-import { streamText, StreamingTextResponse } from 'ai';
+import { streamText } from 'ai'; // ⛔️ FIX: Removed StreamingTextResponse
 import { Ratelimit } from '@upstash/ratelimit'; 
 import { Redis } from '@upstash/redis'; 
 

@@ -5,7 +5,8 @@
 
 // 1. Import the useChat hook
 import { useChat } from '@ai-sdk/react';
-import { FormEvent, useEffect, useRef } from 'react';
+// ⛔️ FIX: Removed unused 'FormEvent' import
+import { useEffect, useRef } from 'react';
 
 export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
 
