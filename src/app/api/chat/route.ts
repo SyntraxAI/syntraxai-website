@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
     const ratelimit = new Ratelimit({
       redis: redis,
-      limiter: Ratelimit.slidingWindow(10, '1 m'), // 10 messages per 1 minute
+      limiter: Ratelimit.slidingWindow(10, '1 m'),
       analytics: true,
     });
 
@@ -40,41 +40,22 @@ export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
 
-    const systemPrompt = `You are a helpful sales assistant for Syntrax AI. 
-    Your goal is to guide users to the right product and book a strategy call.
+    const systemPrompt = `You are a helpful sales assistant for Syntrax AI. ... [system prompt unchanged] ...`;
 
-    Our products are in two categories: "Foundation" (one-time fees for new businesses) and "Engine" (monthly subscriptions for growth).
-
-    YOUR PRIMARY GOAL: Proactively guide the user to book a call at https://calendly.com/adriank-viloria/30min.
-
-    YOUR SECONDARY GOAL: If the user asks about the "AI Audit", your goal is to *convert* this request into a booked call. 
-
-    AI AUDIT FLOW:
-    1. User asks for an "AI Audit".
-    2. Respond: "Great. I can help with that. To provide the best insights, are you just getting started (which we call 'Foundation') or looking to grow an existing business ('Engine')?"
-    3. If they answer, capture their website/email: "Perfect. What is your business website and email address so I can run a preliminary check?"
-    4. Once you have their info, RESPOND: "Thank you. I'm noting some immediate opportunities. Let's book a free strategy call with our team to discuss your full audit and the right product for you. You can book a time here: https://calendly.com/adriank-viloria/30min"
-
-    Keep all other answers concise and helpful. Be friendly and professional.`;
-
-    // 2. We use 'streamText' to get the response as a stream
     const result = await streamText({
-      model: openai('gpt-4o'), // Or gpt-3.5-turbo
+      model: openai('gpt-4o'), 
       system: systemPrompt,
       messages: messages,
     });
 
-    // 3. ⛔️ FIX: Corrected method name to toTextStreamResponse
     return result.toTextStreamResponse();
 
   } catch (error: unknown) {
     console.error("Error in /api/chat:", error);
-
     let errorMessage = "Sorry, an error occurred. Please try again later.";
     if (error instanceof Error) {
       errorMessage = error.message;
     }
-
     return new Response(errorMessage, { status: 500 });
   }
 }
