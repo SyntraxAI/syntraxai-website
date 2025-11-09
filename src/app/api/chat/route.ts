@@ -2,8 +2,7 @@
 // ⬇️ PASTE THIS CODE INTO: src/app/api/chat/route.ts ⬇️
 //
 import { createOpenAI } from '@ai-sdk/openai';
-// 1. We import 'streamText' and 'StreamingTextResponse'
-import { streamText } from 'ai'; // ⛔️ FIX: Removed StreamingTextResponse
+import { streamText } from 'ai'; 
 import { Ratelimit } from '@upstash/ratelimit'; 
 import { Redis } from '@upstash/redis'; 
 
@@ -65,8 +64,8 @@ export async function POST(req: Request) {
       messages: messages,
     });
 
-    // 3. We return the stream as a StreamingTextResponse
-    return result.toAIStreamResponse();
+    // 3. ⛔️ FIX: Corrected method name to toTextStreamResponse
+    return result.toTextStreamResponse();
 
   } catch (error: unknown) {
     console.error("Error in /api/chat:", error);
