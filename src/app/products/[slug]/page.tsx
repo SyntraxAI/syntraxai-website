@@ -40,7 +40,6 @@ async function getProduct(slug: string): Promise<Product | null> {
   noStore();
   
   try {
-    // --- FIX: The invalid 'cache' and 'next' properties are GONE ---
     const entries = await contentfulClient.getEntries({
       content_type: 'project',
       'fields.slug': slug,
@@ -110,10 +109,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <main className="bg-white py-24 sm:py-32">
+      {/* --- THIS IS THE FIX --- */}
+      {/* Changed 'typepre' to 'type' */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
+      {/* --- END FIX --- */}
       <div className="mx-auto max-w-3xl px-6 lg:px-8">
         <article>
           {/* Product Header */}
@@ -143,8 +145,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </Link>
           </header>
 
-          {/* Main Content Body */}
-          <div className="prose prose-lg">
+          {/* We remove "prose prose-lg" to allow our renderer to work */}
+          <div>
             {body ? (
               <RichText content={body as Document} />
             ) : (
