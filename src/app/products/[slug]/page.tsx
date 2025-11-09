@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import { contentfulClient } from '@/lib/contentful';
 import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
-// --- THIS IS THE FIX (Step 1) ---
 import { unstable_noStore as noStore } from 'next/cache';
 
 // Force dynamic rendering and no data caching
@@ -37,12 +36,11 @@ type Product = {
 
 // This function fetches the data for a *single* product
 async function getProduct(slug: string): Promise<Product | null> {
-  // --- THIS IS THE FIX (Step 2) ---
   // This command forces Next.js to bypass its data cache
   noStore();
-  // --- END FIX ---
   
   try {
+    // --- FIX: The invalid 'cache' and 'next' properties are GONE ---
     const entries = await contentfulClient.getEntries({
       content_type: 'project',
       'fields.slug': slug,
@@ -82,10 +80,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 // The Page Component
 export default async function ProductPage({ params }: ProductPageProps) {
-  // --- THIS IS THE FIX (Step 3) ---
-  // It now correctly calls 'getProduct' instead of 'getPost'
   const product = await getProduct(params.slug);
-  // --- END FIX ---
 
   if (!product) {
     notFound();
