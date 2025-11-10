@@ -3,7 +3,7 @@
 //
 "use client";
 
-import { useChat } from '@ai-sdk/react'; // <-- CORRECT V3 IMPORT
+import { useChat } from '@ai-sdk/react'; // <-- This now matches the package.json
 import { useEffect, useRef } from 'react';
 
 export default function ChatWindow({ closeChat }: { closeChat: () => void }) {

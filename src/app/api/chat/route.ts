@@ -1,7 +1,7 @@
 //
 // ⬇️ PASTE THIS CODE INTO: src/app/api/chat/route.ts ⬇️
 //
-import { createOpenAI } from '@ai-sdk/openai'; // <-- CORRECT V3 IMPORT
+import { createOpenAI } from '@ai-sdk/openai'; // <-- This now matches the package.json
 import { streamText } from 'ai'; 
 import { Ratelimit } from '@upstash/ratelimit'; 
 import { Redis } from '@upstash/redis'; 
