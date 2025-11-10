@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
     const ip = req.headers.get('x-forwarded-for') ?? '127.0.0.1';
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    
     const { success, limit: _limit, remaining: _remaining } = await ratelimit.limit(ip);
 
     if (!success) {
