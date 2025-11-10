@@ -1,9 +1,5 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  reactCompiler: true,
-  
-  // --- START: IMAGE CONFIGURATION ---
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   // This tells Next.js to trust images from our Contentful account
   images: {
     remotePatterns: [
@@ -13,7 +9,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // --- END: IMAGE CONFIGURATION ---
 };
 
-export default nextConfig;
+module.exports = nextConfig;
