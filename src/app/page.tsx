@@ -5,6 +5,7 @@ export default function HomePage() {
     <main className="bg-white">
       {/* Hero Section */}
       <div className="relative isolate px-6 pt-14 lg:px-8">
+        {/* Background Gradient */}
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
           aria-hidden="true"
@@ -18,7 +19,11 @@ export default function HomePage() {
           />
         </div>
 
+        {/* FIX: This is the 2-column grid container.
+          We ensure the two columns are direct children.
+        */}
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32 lg:grid lg:grid-cols-2 lg:gap-x-12 lg:py-32">
+          
           {/* Column 1: Text Content */}
           <div className="text-center lg:text-left my-auto">
             <h1 className="text-4xl font-extrabold tracking-tight text-primary sm:text-6xl">
@@ -184,9 +189,6 @@ export default function HomePage() {
         </div>
         {/* Secondary CTA */}
         <div className="mt-20 flex justify-center">
-          {/*
-            FIX: Changed bg-accent to bg-primary and text-primary to text-white
-          */}
           <Link
             href="https://calendly.com/adriank-viloria/30min"
             target="_blank"
