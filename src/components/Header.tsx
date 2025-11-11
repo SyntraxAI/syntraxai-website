@@ -58,11 +58,13 @@ export default function Header() {
 
         {/* Desktop CTA */}
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          {/* NEW: Added transition-transform and hover:scale-105
+          */}
           <Link
             href="https://calendly.com/adriank-viloria/30min"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
+            className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 transition-transform hover:scale-105"
           >
             Book a Call
           </Link>
