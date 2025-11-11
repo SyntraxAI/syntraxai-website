@@ -6,7 +6,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <div className="relative isolate px-6 pt-14 lg:px-8">
         {/* NEW: We add a subtle background gradient here to add depth
-        */}
+         */}
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
           aria-hidden="true"
@@ -19,7 +19,7 @@ export default function HomePage() {
             }}
           />
         </div>
-        
+
         {/* NEW: This is now a 2-column grid on desktop (lg:grid-cols-2).
           We also changed padding: py-32 is now py-24 sm:py-32
         */}
@@ -71,21 +71,24 @@ export default function HomePage() {
               <div className="rounded-2xl bg-white p-8 shadow-lg">
                 <h3 className="text-2xl font-semibold leading-8 text-gray-900">The &quot;Old&quot; Agency</h3>
                 <ul role="list" className="mt-8 space-y-3 text-gray-600">
+                  {/*
+                    NEW: Replaced the old SVG with a modern 'X' icon
+                  */}
                   <li className="flex gap-x-3">
-                    <svg className="h-6 w-5 flex-none text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+                    <svg className="h-6 w-5 flex-none text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                     <span>Vague, 12-month retainers</span>
                   </li>
                   <li className="flex gap-x-3">
-                    <svg className="h-6 w-5 flex-none text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+                    <svg className="h-6 w-5 flex-none text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                     <span>Confusing proposals &amp; surprise fees</span>
                   </li>
                   <li className="flex gap-x-3">
-                    <svg className="h-6 w-5 flex-none text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+                    <svg className="h-6 w-5 flex-none text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                     <span>Slow onboarding &amp; delivery</span>
                   </li>
@@ -95,21 +98,24 @@ export default function HomePage() {
               <div className="rounded-2xl bg-white p-8 shadow-lg">
                 <h3 className="text-2xl font-semibold leading-8 text-gray-900">The &quot;Productized&quot; Agency</h3>
                 <ul role="list" className="mt-8 space-y-3 text-gray-600">
+                  {/*
+                    NEW: Replaced the old SVG with a modern 'Check' icon and set color to text-accent
+                  */}
                   <li className="flex gap-x-3">
-                    <svg className="h-6 w-5 flex-none text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+                    <svg className="h-6 w-5 flex-none text-accent" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
                     <span>Fixed-scope, monthly subscriptions</span>
                   </li>
                   <li className="flex gap-x-3">
-                    <svg className="h-6 w-5 flex-none text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+                    <svg className="h-6 w-5 flex-none text-accent" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
                     <span>Transparent, public pricing</span>
                   </li>
                   <li className="flex gap-x-3">
-                    <svg className="h-6 w-5 flex-none text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+                    <svg className="h-6 w-5 flex-none text-accent" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
                     <span>Launch in days, not months</span>
                   </li>
@@ -126,8 +132,6 @@ export default function HomePage() {
           How It Works
         </h2>
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-4">
-          {/* NEW: Added border-t, border-primary, and pt-8 to each step
-          */}
           {/* Step 1 */}
           <div className="flex flex-col border-t-2 border-primary pt-8">
             <div className="text-xl font-semibold text-primary">01.</div>

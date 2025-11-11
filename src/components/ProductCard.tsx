@@ -18,7 +18,8 @@ export default function ProjectCard({
   ctaLink 
 }: ProjectCardProps) {
   return (
-    <div className="flex flex-col rounded-lg border border-gray-200 bg-white shadow-lg overflow-hidden">
+    // NEW: Added group, transition-all, duration-300, ease-in-out, and hover:scale-105
+    <div className="group flex flex-col rounded-lg border border-gray-200 bg-white shadow-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl hover:scale-105">
       {/* 1. Header: Title, Description, Price */}
       <div className="p-6">
         <h3 className="text-2xl font-semibold text-gray-900">{title}</h3>
@@ -31,6 +32,8 @@ export default function ProjectCard({
 
       {/* 2. CTA */}
       <div className="flex-grow flex flex-col justify-end p-6 bg-gray-50">
+        {/* NEW: Added group-hover:bg-primary/90 to match the card's button
+        */}
         <Link 
           href={ctaLink} 
           className="block w-full rounded-lg bg-primary px-6 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
