@@ -11,8 +11,12 @@ export default function ChatWidget() {
   const toggleChat = () => setIsOpen(!isOpen);
 
   return (
-    // FIX: This 'fixed' class is the key.
-    <div className="fixed bottom-4 right-4 z-50">
+    //
+    // This is the correct position:
+    // 1. 'right-4' (moves it to the right)
+    // 2. 'bottom-8' (lifts it above the footer text)
+    //
+    <div className="fixed bottom-8 right-4 z-50">
       {/* 1. If chat is NOT open, show the bubble */}
       {!isOpen && (
         <button
@@ -27,6 +31,7 @@ export default function ChatWidget() {
       )}
 
       {/* 2. If chat IS open, render the full ChatWindow component */}
+      {/* This will now open from the bottom-right, clear of the footer text */}
       {isOpen && (
         <ChatWindow closeChat={toggleChat} />
       )}
