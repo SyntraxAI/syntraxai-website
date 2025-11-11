@@ -50,7 +50,7 @@ export default function Header() {
         {/* Desktop Menu Links */}
         <div className="hidden lg:flex lg:gap-x-12">
           {navLinks.map((item) => (
-            <Link key={item.name} href={item.href} className="text-sm font-semibold leading-6 text-gray-900 hover:text-blue-600">
+            <Link key={item.name} href={item.href} className="text-sm font-semibold leading-6 text-gray-900 hover:text-primary">
               {item.name}
             </Link>
           ))}
@@ -62,7 +62,7 @@ export default function Header() {
             href="https://calendly.com/adriank-viloria/30min"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
+            className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
           >
             Book a Call
           </Link>

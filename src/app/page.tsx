@@ -6,7 +6,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <div className="relative isolate px-6 pt-14 lg:px-8">
         <div className="mx-auto max-w-3xl py-32 sm:py-48 lg:py-56 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-primary sm:text-6xl">
             Ditch the Retainer. Buy the Result.
           </h1>
           {/* --- FIX: Escaped apostrophe ' --- */}
@@ -19,13 +19,13 @@ export default function HomePage() {
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Link
               href="/products#foundation"
-              className="rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               Get Your Foundation
             </Link>
             <Link
               href="/products#engine"
-              className="text-sm font-semibold leading-6 text-gray-900"
+              className="text-sm font-semibold leading-6 text-primary hover:text-primary/80"
             >
               Scale Your Engine <span aria-hidden="true">→</span>
             </Link>
@@ -104,7 +104,7 @@ export default function HomePage() {
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-4">
           {/* Step 1 */}
           <div className="flex flex-col">
-            <div className="text-xl font-semibold text-blue-600">01.</div>
+            <div className="text-xl font-semibold text-primary">01.</div>
             <h3 className="mt-2 text-lg font-semibold text-gray-900">Choose Your Product</h3>
             <p className="mt-2 text-base text-gray-600">
               Browse our menu of fixed-price products. Find the exact solution you need, 
@@ -113,7 +113,7 @@ export default function HomePage() {
           </div>
           {/* Step 2 */}
           <div className="flex flex-col">
-            <div className="text-xl font-semibold text-blue-600">02.</div>
+            <div className="text-xl font-semibold text-primary">02.</div>
             <h3 className="mt-2 text-lg font-semibold text-gray-900">Book Your Strategy Call</h3>
             <p className="mt-2 text-base text-gray-600">
               {/* --- FIX: Escaped apostrophe ' --- */}
@@ -123,7 +123,7 @@ export default function HomePage() {
           </div>
           {/* Step 3 */}
           <div className="flex flex-col">
-            <div className="text-xl font-semibold text-blue-600">03.</div>
+            <div className="text-xl font-semibold text-primary">03.</div>
             <h3 className="mt-2 text-lg font-semibold text-gray-900">We Get to Work</h3>
             <p className="mt-2 text-base text-gray-600">
               Our human-led, AI-powered team builds your product. We use AI for speed 
@@ -132,7 +132,7 @@ export default function HomePage() {
           </div>
           {/* Step 4 */}
           <div className="flex flex-col">
-            <div className="text-xl font-semibold text-blue-600">04.</div>
+            <div className="text-xl font-semibold text-primary">04.</div>
             <h3 className="mt-2 text-lg font-semibold text-gray-900">Receive Your Deliverable</h3>
             <p className="mt-2 text-base text-gray-600">
               On time and on budget. We deliver your finished product and show you 
@@ -146,7 +146,7 @@ export default function HomePage() {
             href="https://calendly.com/adriank-viloria/30min"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+            className="rounded-md bg-accent px-3.5 py-2.5 text-sm font-semibold text-primary shadow-sm hover:bg-accent-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             [ Book Your Free Strategy Call ]
           </Link>

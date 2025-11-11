@@ -8,7 +8,7 @@ type EmbeddedCTAProps = {
 
 export default function EmbeddedCTA({ headline, subtext, buttonText }: EmbeddedCTAProps) {
   return (
-    <div className="relative my-12 overflow-hidden rounded-2xl bg-blue-600 p-8 shadow-lg">
+    <div className="relative my-12 overflow-hidden rounded-2xl bg-primary p-8 shadow-lg">
       {/* Decorative background pattern */}
       <svg
         aria-hidden="true"
@@ -48,7 +48,7 @@ export default function EmbeddedCTA({ headline, subtext, buttonText }: EmbeddedC
           rel="noopener noreferrer"
           // --- END FIX ---
 
-          className="mt-8 inline-block rounded-md bg-white px-5 py-3 text-base font-semibold text-blue-700 shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="mt-8 inline-block rounded-md bg-white px-5 py-3 text-base font-semibold text-primary shadow-sm hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           {buttonText}
         </Link>

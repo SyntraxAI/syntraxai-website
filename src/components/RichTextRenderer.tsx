@@ -41,7 +41,7 @@ const options: Options = {
 
     // --- Style Blockquotes ---
     [BLOCKS.QUOTE]: (node, children) => (
-      <blockquote className="border-l-4 border-blue-500 pl-4 py-2 my-6 text-xl italic text-gray-600">
+      <blockquote className="border-l-4 border-primary pl-4 py-2 my-6 text-xl italic text-gray-600">
         {children}
       </blockquote>
     ),
@@ -52,7 +52,7 @@ const options: Options = {
         href={node.data.uri} 
         target="_blank" 
         rel="noopener noreferrer" 
-        className="text-blue-600 underline hover:text-blue-800"
+        className="text-primary underline hover:text-primary/80"
       >
         {children}
       </a>

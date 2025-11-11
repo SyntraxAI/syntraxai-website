@@ -23,7 +23,7 @@ export default function ProjectCard({
       <div className="p-6">
         <h3 className="text-2xl font-semibold text-gray-900">{title}</h3>
         <p className="mt-3 text-base text-gray-600">{description}</p>
-        <p className="mt-4 text-3xl font-bold text-blue-600">{price}</p>
+        <p className="mt-4 text-3xl font-bold text-primary">{price}</p>
         <p className="mt-4 text-sm font-medium text-gray-500">
           <span className="font-bold text-gray-700">Best for:</span> {bestFor}
         </p>
@@ -33,7 +33,7 @@ export default function ProjectCard({
       <div className="flex-grow flex flex-col justify-end p-6 bg-gray-50">
         <Link 
           href={ctaLink} 
-          className="block w-full rounded-lg bg-blue-600 px-6 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          className="block w-full rounded-lg bg-primary px-6 py-3 text-center text-lg font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           Learn More
         </Link>

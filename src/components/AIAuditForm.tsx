@@ -57,7 +57,7 @@ export default function AIAuditForm() {
           <input
             type="text" name="name" id="name" autoComplete="name"
             required disabled={isSubmitting}
-            className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
           />
         </div>
       </div>
@@ -71,7 +71,7 @@ export default function AIAuditForm() {
           <input
             type="email" name="email" id="email" autoComplete="email"
             required disabled={isSubmitting}
-            className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
           />
         </div>
       </div>
@@ -85,7 +85,7 @@ export default function AIAuditForm() {
           <input
             type="url" name="website" id="website" autoComplete="url"
             required disabled={isSubmitting} placeholder="https://yourwebsite.com"
-            className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
           />
         </div>
       </div>
@@ -95,7 +95,7 @@ export default function AIAuditForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="block w-full rounded-md bg-blue-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-700 disabled:bg-gray-400"
+          className="block w-full rounded-md bg-primary px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-primary/90 disabled:bg-gray-400"
         >
           {isSubmitting ? 'Running Audit...' : 'Get My Free Report'}
         </button>

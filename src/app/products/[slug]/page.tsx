@@ -134,7 +134,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <article>
           {/* Product Header */}
           <header className="mb-12 border-b border-gray-200 pb-8">
-            <p className="text-base font-semibold leading-7 text-blue-600">
+            <p className="text-base font-semibold leading-7 text-primary">
               {category} Product
             </p>
             <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -153,7 +153,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               href="https://calendly.com/adriank-viloria/30min"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-10 block w-full rounded-md bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+              className="mt-10 block w-full rounded-md bg-accent px-3.5 py-2.5 text-center text-sm font-semibold text-primary shadow-sm hover:bg-accent-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               [ Book Your Free Strategy Call ]
             </Link>

@@ -116,7 +116,7 @@ export default async function ProductsPage() {
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               Why This Model Works
             </h2>
-            <p className="mt-6 text-2xl font-semibold leading-8 text-blue-600">
+            <p className="mt-6 text-2xl font-semibold leading-8 text-primary">
               Human-Led, AI-Powered.
             </p>
             <p className="mt-4 text-lg text-gray-600">
@@ -162,7 +162,7 @@ export default async function ProductsPage() {
               href="https://calendly.com/adriank-viloria/30min"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+              className="rounded-md bg-accent px-3.5 py-2.5 text-sm font-semibold text-primary shadow-sm hover:bg-accent-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               [ Book Your Free Strategy Call ]
             </Link>

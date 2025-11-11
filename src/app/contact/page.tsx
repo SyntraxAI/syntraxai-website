@@ -22,7 +22,7 @@ export default function ContactPage() {
             href="https://calendly.com/adriank-viloria/30min"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md bg-green-600 px-3.5 py-2.5 text-lg font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+            className="rounded-md bg-accent px-3.5 py-2.5 text-lg font-semibold text-primary shadow-sm hover:bg-accent-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             [ Book Your Free Strategy Call ]
           </Link>
@@ -37,7 +37,7 @@ export default function ContactPage() {
             reach us by email.
           </p>
           <p className="mt-4 text-lg">
-            <a href="mailto:adriank.viloria@gmail.com" className="font-semibold text-blue-600 hover:text-blue-500">
+            <a href="mailto:adriank.viloria@gmail.com" className="font-semibold text-primary hover:text-primary/80">
               adriank.viloria@gmail.com
             </a>
           </p>

@@ -113,7 +113,7 @@ export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
         )}
         {messages.map(m => (
           <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`rounded-lg px-3 py-2 max-w-[80%] ${m.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
+            <div className={`rounded-lg px-3 py-2 max-w-[80%] ${m.role === 'user' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}>
               {m.content}
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
         <div className="flex items-center space-x-2">
           <input
             name="message"
-            className="flex-grow border border-gray-300 rounded-md p-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400"
+            className="flex-grow border border-gray-300 rounded-md p-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-gray-400"
             value={inputValue}
             placeholder="Ask a question..."
             onChange={(e) => setInputValue(e.target.value)}
@@ -135,7 +135,7 @@ export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
           />
           <button
             type="submit"
-            className="bg-blue-600 text-white rounded-md p-2 hover:bg-blue-700 disabled:bg-gray-400"
+            className="bg-primary text-white rounded-md p-2 hover:bg-primary/90 disabled:bg-gray-400"
             disabled={isLoading || !inputValue.trim()}
             aria-label="Send message"
           >
