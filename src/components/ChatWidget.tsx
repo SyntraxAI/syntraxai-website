@@ -11,15 +11,12 @@ export default function ChatWidget() {
   const toggleChat = () => setIsOpen(!isOpen);
 
   return (
-    // This 'fixed' class puts it in the bottom-right corner
+    // FIX: This 'fixed' class is the key.
     <div className="fixed bottom-4 right-4 z-50">
       {/* 1. If chat is NOT open, show the bubble */}
       {!isOpen && (
         <button
           onClick={toggleChat}
-          //
-          // FIX: Changed all 'accent' classes to 'primary' and text to 'white'
-          //
           className="bg-primary text-white rounded-full p-4 shadow-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-transform hover:scale-110"
           aria-label="Open chat"
         >

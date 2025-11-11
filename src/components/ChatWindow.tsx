@@ -95,11 +95,12 @@ export default function ChatWindow({ closeChat }: { closeChat: () => void }) {
   };
 
   return (
+    // This root div should NOT have 'fixed' or 'absolute'
     <div className="bg-white rounded-lg shadow-xl w-80 h-96 flex flex-col border border-gray-200">
       {/* Header */}
-      <div className="bg-gray-100 p-3 flex justify-between items-center rounded-t-lg border-b border-gray-200">
-        <h3 className="font-semibold text-gray-800">Syntrax AI Assistant</h3>
-        <button onClick={closeChat} className="text-gray-500 hover:text-gray-700" aria-label="Close chat">
+      <div className="bg-primary p-3 flex justify-between items-center rounded-t-lg">
+        <h3 className="font-semibold text-white">Syntrax AI Assistant</h3>
+        <button onClick={closeChat} className="text-gray-300 hover:text-white" aria-label="Close chat">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>
