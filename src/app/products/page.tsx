@@ -158,13 +158,14 @@ export default async function ProductsPage() {
             We&apos;ll listen to your goals and tell you exactly which product (if any) is right for you.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            {/* NEW: Added transition-transform and hover:scale-105
+            {/*
+              FIX: Changed bg-accent to bg-primary and text-primary to text-white
             */}
             <Link
               href="https://calendly.com/adriank-viloria/30min"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-md bg-accent px-3.5 py-2.5 text-sm font-semibold text-primary shadow-sm hover:bg-accent-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-transform hover:scale-105"
+              className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-transform hover:scale-105"
             >
               [ Book Your Free Strategy Call ]
             </Link>

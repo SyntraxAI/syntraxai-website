@@ -5,8 +5,6 @@ export default function HomePage() {
     <main className="bg-white">
       {/* Hero Section */}
       <div className="relative isolate px-6 pt-14 lg:px-8">
-        {/* NEW: We add a subtle background gradient here to add depth
-         */}
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
           aria-hidden="true"
@@ -20,12 +18,9 @@ export default function HomePage() {
           />
         </div>
 
-        {/* NEW: This is now a 2-column grid on desktop (lg:grid-cols-2).
-          We also changed padding: py-32 is now py-24 sm:py-32
-        */}
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32 lg:grid lg:grid-cols-2 lg:gap-x-12 lg:py-32">
           {/* Column 1: Text Content */}
-          <div className="text-center lg:text-left">
+          <div className="text-center lg:text-left my-auto">
             <h1 className="text-4xl font-extrabold tracking-tight text-primary sm:text-6xl">
               Ditch the Retainer. Buy the Result.
             </h1>
@@ -50,11 +45,34 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Column 2: Visual (Empty for now, but structures the page)
-            We can add an image or graphic here later.
-          */}
-          <div className="hidden lg:block">
-            {/* Placeholder for a future image/graphic */}
+          {/* Column 2: Visual */}
+          <div className="hidden lg:flex items-center justify-center p-8">
+            <svg
+              width="100%"
+              viewBox="0 0 400 400"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="opacity-75"
+            >
+              <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: '#16e1a7', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: '#0f2c4b', stopOpacity: 1 }} />
+                </linearGradient>
+              </defs>
+              <path
+                d="M313.3 226.7C340 273.3 300 353.3 240 380C180 406.7 93.3 380 46.7 340C0 300 0 213.3 46.7 173.3C93.3 133.3 180 140 240 173.3C300 206.7 286.7 180 313.3 226.7Z"
+                fill="url(#grad1)"
+                transform="rotate(20 200 200)"
+              />
+              <path
+                d="M280 180C306.7 226.7 266.7 306.7 206.7 333.3C146.7 360 60 333.3 13.3 293.3C-33.3 253.3 -33.3 166.7 13.3 126.7C60 86.7 146.7 93.3 206.7 126.7C266.7 160 253.3 133.3 280 180Z"
+                fill="white"
+                stroke="#E5E7EB"
+                strokeWidth="2"
+                transform="rotate(-10 200 200) translate(20 20)"
+              />
+            </svg>
           </div>
         </div>
       </div>
@@ -71,9 +89,6 @@ export default function HomePage() {
               <div className="rounded-2xl bg-white p-8 shadow-lg">
                 <h3 className="text-2xl font-semibold leading-8 text-gray-900">The &quot;Old&quot; Agency</h3>
                 <ul role="list" className="mt-8 space-y-3 text-gray-600">
-                  {/*
-                    NEW: Replaced the old SVG with a modern 'X' icon
-                  */}
                   <li className="flex gap-x-3">
                     <svg className="h-6 w-5 flex-none text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -98,9 +113,6 @@ export default function HomePage() {
               <div className="rounded-2xl bg-white p-8 shadow-lg">
                 <h3 className="text-2xl font-semibold leading-8 text-gray-900">The &quot;Productized&quot; Agency</h3>
                 <ul role="list" className="mt-8 space-y-3 text-gray-600">
-                  {/*
-                    NEW: Replaced the old SVG with a modern 'Check' icon and set color to text-accent
-                  */}
                   <li className="flex gap-x-3">
                     <svg className="h-6 w-5 flex-none text-accent" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -172,11 +184,14 @@ export default function HomePage() {
         </div>
         {/* Secondary CTA */}
         <div className="mt-20 flex justify-center">
+          {/*
+            FIX: Changed bg-accent to bg-primary and text-primary to text-white
+          */}
           <Link
             href="https://calendly.com/adriank-viloria/30min"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md bg-accent px-3.5 py-2.5 text-sm font-semibold text-primary shadow-sm hover:bg-accent-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-transform hover:scale-105"
+            className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-transform hover:scale-105"
           >
             [ Book Your Free Strategy Call ]
           </Link>
