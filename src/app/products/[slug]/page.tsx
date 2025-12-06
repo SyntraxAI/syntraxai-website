@@ -1,21 +1,19 @@
-//
-// ⬇️ PASTE THIS CODE INTO: src/app/products/[slug]/page.tsx ⬇️
-//
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { contentfulClient } from '@/lib/contentful';
 import { RichText } from '@/components/RichTextRenderer';
 import { Document } from '@contentful/rich-text-types';
-// import { unstable_noStore as noStore } from 'next/cache'; // ⛔️ REMOVED
+import { unstable_noStore as noStore } from 'next/cache';
 
-// --- FIX 1: We are NO LONGER forcing dynamic rendering ---
-// export const dynamic = 'force-dynamic'; // ⛔️ REMOVED
+// --- FIX 1: Force dynamic rendering ---
+export const dynamic = 'force-dynamic';
 
+// --- FIX 2: Update Type for Next.js 15 ---
 type ProductPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 // (Type Definitions)
@@ -31,32 +29,10 @@ type Product = {
     body: Document;
   };
 };
-// (End Type Definitions)
 
-// --- FIX 2: Add generateStaticParams to build all products at build time ---
-export async function generateStaticParams() {
-  try {
-    const entries = await contentfulClient.getEntries({
-      content_type: 'project', // This is the ID for your products
-      select: ['fields.slug'],
-    });
-
-    const products = (entries.items as unknown as { fields: { slug: string } }[]);
-
-    return products.map((product) => ({
-      slug: product.fields.slug,
-    }));
-  } catch (error) {
-    console.error("Error fetching product slugs for generateStaticParams:", error);
-    return [];
-  }
-}
-
-// This function fetches the data for a *single* product
 async function getProduct(slug: string): Promise<Product | null> {
-  // --- FIX 3: Force data re-fetch to bypass Vercel's data cache ---
-  // noStore(); // ⛔️ REMOVED
-
+  noStore();
+  
   try {
     const entries = await contentfulClient.getEntries({
       content_type: 'project',
@@ -75,9 +51,10 @@ async function getProduct(slug: string): Promise<Product | null> {
   }
 }
 
-// This function generates the page-specific metadata
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const product = await getProduct(params.slug);
+  // --- FIX 3: Await params ---
+  const { slug } = await params;
+  const product = await getProduct(slug);
 
   if (!product) {
     return {
@@ -94,19 +71,19 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   };
 }
 
-// The Page Component
 export default async function ProductPage({ params }: ProductPageProps) {
-  const product = await getProduct(params.slug);
+  // --- FIX 4: Await params ---
+  const { slug } = await params;
+  const product = await getProduct(slug);
 
   if (!product) {
     notFound();
   }
 
-  // Destructure fields from 'product'
   const { title, description, price, bestFor, category, body } = product.fields;
 
   const productSchema = {
-    "@context": "https:schema.org",
+    "@context": "https://schema.org",
     "@type": "Product",
     "name": title,
     "description": description,
@@ -118,8 +95,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
       "@type": "Offer",
       "price": price, 
       "priceCurrency": "USD", 
-      "availability": "https:schema.org/InStock",
-      "url": `https://www.syntraxai.com/products/${params.slug}`
+      "availability": "https://schema.org/InStock",
+      "url": `https://www.syntraxai.com/products/${slug}`
     },
     "category": category
   };
@@ -132,9 +109,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
       />
       <div className="mx-auto max-w-3xl px-6 lg:px-8">
         <article>
-          {/* Product Header */}
           <header className="mb-12 border-b border-gray-200 pb-8">
-            <p className="text-base font-semibold leading-7 text-primary">
+            <p className="text-base font-semibold leading-7 text-blue-600">
               {category} Product
             </p>
             <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -149,14 +125,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <p className="mt-4 text-base text-gray-600">
               <span className="font-semibold text-gray-800">Best for:</span> {bestFor}
             </p>
-            {/*
-              FIX: Changed bg-accent to bg-primary and text-primary to text-white
-            */}
             <Link
               href="https://calendly.com/adriank-viloria/30min"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-10 block w-full rounded-md bg-primary px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-transform hover:scale-105"
+              className="mt-10 block w-full rounded-md bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
             >
               [ Book Your Free Strategy Call ]
             </Link>
