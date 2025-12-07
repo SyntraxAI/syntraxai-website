@@ -126,7 +126,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <span className="font-semibold text-gray-800">Best for:</span> {bestFor}
             </p>
             <Link
-              href="https://calendly.com/adriank-viloria/30min"
+              href="https://calendly.com/syntraxai/30min"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-10 block w-full rounded-md bg-green-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"

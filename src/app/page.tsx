@@ -190,7 +190,7 @@ export default function HomePage() {
         {/* Secondary CTA */}
         <div className="mt-20 flex justify-center">
           <Link
-            href="https://calendly.com/adriank-viloria/30min"
+            href="https://calendly.com/syntraxai/30min"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-transform hover:scale-105"
