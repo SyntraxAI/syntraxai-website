@@ -40,8 +40,8 @@ export default function ContactPage() {
             reach us by email.
           </p>
           <p className="mt-4 text-lg">
-            <a href="mailto:adriank.viloria@gmail.com" className="font-semibold text-primary hover:text-primary/80">
-              adriank.viloria@gmail.com
+            <a href="mailto:hello@syntraxai.com" className="font-semibold text-primary hover:text-primary/80">
+              hello@syntraxai.com
             </a>
           </p>
         </div>

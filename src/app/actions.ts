@@ -51,7 +51,7 @@ export async function submitAuditForm(formData: AuditFormData) {
   try {
     const { data, error } = await resend.emails.send({
       from: 'Syntrax AI <leads@leads.syntraxai.com>', // From your verified domain
-      to: ['adriank.viloria@gmail.com'], // CHANGE THIS to your email
+      to: ['leads@syntraxai.com'], // CHANGE THIS to your email
       subject: `New AI Audit Lead: ${formData.website}`,
       html: `
         <h1>New "AI Audit" Lead</h1>
